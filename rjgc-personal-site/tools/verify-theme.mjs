@@ -114,6 +114,31 @@ if (!existsSync(join(root, 'node_modules', 'hexo-renderer-stylus'))) {
   console.log('  [ok] hexo-renderer-stylus 已安装（.styl 可编译）');
 }
 
+// ---- 6. lockfile 不被镜像源污染 ----
+// 本机用户级 ~/.npmrc 使用 npmmirror，若生成 lockfile 时项目级 .npmrc 未生效，
+// resolved 会写成 cdn.npmmirror.com。GitHub Actions 在境外访问该CDN 会 404，
+// 导致 npm ci 失败（"is not in this registry"）。这里提前断言。
+{
+  const lockPath = join(root, 'package-lock.json');
+  if (!existsSync(lockPath)) {
+    fail('package-lock.json 不存在 —— CI 使用 npm ci，必须提交 lockfile。');
+  } else {
+    const lock = readFileSync(lockPath, 'utf8');
+    const mirrors = [...lock.matchAll(/"resolved":\s*"https:\/\/([^/]+)\//g)]
+      .map((m) => m[1])
+      .filter((h) => h !== 'registry.npmjs.org');
+    const uniq = [...new Set(mirrors)];
+    if (uniq.length) {
+      fail(`package-lock.json 的 resolved 指向非官方源：${uniq.join(', ')}。` +
+           'CI 会因镜像 CDN 不可达而失败。请确认项目级 .npmrc 的 registry 为' +
+           ' https://registry.npmjs.org/，然后重新生成 lockfile。');
+    } else {
+      const total = [...lock.matchAll(/"resolved":/g)].length;
+      console.log(`  [ok] lockfile ${total} 条 resolved 均为官方源`);
+    }
+  }
+}
+
 // ---- 输出 ----
 if (warnings.length) {
   console.log('\n警告：');
