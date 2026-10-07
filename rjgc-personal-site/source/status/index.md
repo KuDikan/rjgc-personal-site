@@ -12,15 +12,7 @@ date: 2026-10-07
 
 ## 站点状态
 
-<div id="site-status" class="site-status">
-  <p class="loading">正在加载状态数据…</p>
-</div>
-
-若一直显示加载中，执行：
-
-```bash
-npm run data
-```
+{% status_panel %}
 
 ## 这个面板想说明什么
 

@@ -19,18 +19,7 @@ date: 2026-10-07
 
 ## 论文列表
 
-<div id="papers-list" class="papers-list">
-  <p class="loading">正在加载论文数据…</p>
-</div>
-
-如果上方一直显示"正在加载"，说明 `source/_data/papers.json` 尚未生成。
-在项目根目录执行：
-
-```bash
-npm run data
-```
-
-即可重新抓取。
+{% papers_list %}
 
 ## 信任边界
 

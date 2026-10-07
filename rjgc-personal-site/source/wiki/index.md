@@ -32,9 +32,7 @@ updated: 2026-10-07
 
 ## 词条索引
 
-<div id="wiki-index" class="wiki-index">
-  <p class="loading">正在加载索引…</p>
-</div>
+{% wiki_index %}
 
 ## 双向链接
 

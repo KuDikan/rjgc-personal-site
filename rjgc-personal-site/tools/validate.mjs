@@ -223,7 +223,46 @@ function validateAttribution() {
   }
 }
 
-// ---------- 5. 占位内容检查 ----------
+// ---------- 5b. 数据面板必须已渲染（构建期，不能留占位） ----------
+
+// 历史教训：papers/rss/status/wiki 曾用客户端占位 div
+//（<p class="loading">正在加载…</p>），但站点里没有任何脚本会去填它们。
+// Hexo 是静态生成器，source/_data/*.json 在构建期就能渲染，
+// 因此占位符永远不会消失——线上直接显示"正在加载"。
+// 这里断言这些页面必须含真实数据，且不得残留占位文案。
+const DATA_PAGES = [
+  ['status/index.html', 'stat-grid', '状态面板'],
+  ['papers/index.html', 'paper-list', '论文列表'],
+  ['rss/index.html', 'rss-list', '外部订阅'],
+  ['wiki/index.html', 'wiki-list', 'Wiki 索引'],
+];
+
+for (const [rel, marker, label] of DATA_PAGES) {
+  const p = join(PUBLIC_DIR, rel);
+  if (!existsSync(p)) continue; // 缺页已由 validatePages 报告
+  const html = readFileSync(p, 'utf8');
+
+  // 只匹配中文占位文案。注意不能匹配裸的 "loading" —— 主题自带的加载动画
+  // 会输出 loading 相关的 class/属性，误判会导致假警报。
+  if (/正在加载/.test(html)) {
+    err(`${label} 页面仍含"正在加载"占位内容 —— 数据面板未在构建期渲染。` +
+        '检查 source/对应页面是否使用了 {% status_panel %} 等标签。');
+  }
+  if (html.includes('class="loading"')) {
+    err(`${label} 页面仍含 class="loading" 占位元素 —— 应在构建期渲染为真实数据。`);
+  }
+  if (!html.includes(marker)) {
+    err(`${label} 页面缺少数据标记 ${marker} —— 标签可能未生效或数据源为空。`);
+  }
+  // 数据面板依赖 scripts/data-tags.js（CommonJS，Hexo 插件）
+  if (!existsSync(join(root, 'scripts', 'data-tags.js'))) {
+    err('缺少 scripts/data-tags.js —— Hexo 插件目录下的该文件提供数据渲染标签');
+    break;
+  }
+}
+if (!errors.length) console.log(`  [ok] 数据面板 ${DATA_PAGES.length} 个页面均已渲染`);
+
+// ---------- 6. 占位内容检查 ----------
 
 function validatePlaceholders() {
   const files = walk(PUBLIC_DIR).filter((f) => f.endsWith('.html'));

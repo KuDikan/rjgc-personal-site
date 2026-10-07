@@ -1,0 +1,217 @@
+// 数据面板样式（papers / rss / status / wiki 四个页面）
+//
+// 由 ShokaX 的 before_generate 自动加载：主题会检测 source/_data/custom.styl
+// 是否存在，存在则追加到页面样式末尾，因此这里的规则可以覆盖主题默认样式。
+//
+// 注意：文件内容是 Stylus（.styl），不是 CSS。
+
+// ---------- 通用面板 ----------
+.data-panel
+  margin 1.5em 0
+
+.panel-count
+  display inline-block
+  margin-left .5em
+  padding .1em .6em
+  border-radius 1em
+  font-size .7em
+  font-weight 400
+  vertical-align middle
+  color var(--theme-color, #49b1ab)
+  background rgba(73, 177, 171, .12)
+
+.panel-block
+  margin-top 1.5em
+
+.panel-note
+  margin-top 1em
+  padding-top .8em
+  border-top 1px solid var(--grey-4, #eee)
+  font-size .78em
+  line-height 1.6
+  color var(--grey-6, #888)
+
+// 数据缺失时的提示
+.data-empty
+  padding 1.2em
+  border 1px dashed var(--grey-4, #ddd)
+  border-radius 6px
+  font-size .85em
+  color var(--grey-6, #888)
+  text-align center
+
+  code
+    padding .1em .4em
+    border-radius 3px
+    font-size .9em
+    background var(--grey-3, #f5f5f5)
+
+// ---------- 状态面板 ----------
+.stat-grid
+  display grid
+  grid-template-columns repeat(auto-fill, minmax(120px, 1fr))
+  gap .8em
+  margin 0
+  padding 0
+  list-style none
+
+.stat
+  margin 0
+
+.stat-body
+  display block
+  padding 1em .6em
+  border 1px solid var(--grey-4, #eee)
+  border-radius 8px
+  text-align center
+  color inherit
+  transition border-color .2s, transform .2s
+
+  &:hover
+    border-color var(--theme-color, #49b1ab)
+    transform translateY(-2px)
+
+.stat-value
+  display block
+  font-size 1.6em
+  font-weight 600
+  line-height 1.2
+  color var(--theme-color, #49b1ab)
+
+.stat-label
+  display block
+  margin-top .3em
+  font-size .75em
+  color var(--grey-6, #888)
+
+// 技术栈表格
+.stack-list
+  display grid
+  grid-template-columns repeat(auto-fill, minmax(220px, 1fr))
+  gap .4em .8em
+  margin-top .8em
+
+.stack-row
+  display flex
+  justify-content space-between
+  gap .8em
+  padding .45em .7em
+  border-radius 5px
+  font-size .82em
+  background var(--grey-3, #f7f7f7)
+
+.stack-key
+  color var(--grey-6, #888)
+  font-family monospace
+
+.stack-val
+  font-weight 600
+  text-align right
+
+// ---------- 论文列表 ----------
+.paper-list
+  margin 0
+  padding 0
+  list-style none
+
+.paper
+  padding 1.1em 0
+  border-bottom 1px solid var(--grey-4, #eee)
+
+  &:last-child
+    border-bottom none
+
+.paper-title
+  font-size 1.02em
+  font-weight 600
+  line-height 1.5
+  color var(--theme-color, #49b1ab)
+
+.paper-meta
+  display flex
+  flex-wrap wrap
+  gap .8em
+  margin-top .45em
+  font-size .74em
+  color var(--grey-6, #888)
+
+.paper-id
+  font-family monospace
+
+.paper-abstract
+  margin-top .6em
+  font-size .85em
+  line-height 1.7
+  color var(--grey-7, #666)
+
+// ---------- 外部订阅 ----------
+.feed-group
+  margin-top 1.6em
+
+  &:first-child
+    margin-top 0
+
+.rss-list
+  margin .6em 0 0
+  padding 0
+  list-style none
+
+.rss-item
+  padding .8em 0
+  border-bottom 1px dashed var(--grey-4, #eee)
+
+  &:last-child
+    border-bottom none
+
+.rss-link
+  font-size .95em
+  font-weight 600
+  color var(--theme-color, #49b1ab)
+
+.rss-date
+  display block
+  margin-top .25em
+  font-size .72em
+  color var(--grey-6, #888)
+
+.rss-summary
+  margin-top .45em
+  font-size .84em
+  line-height 1.7
+  color var(--grey-7, #666)
+
+// ---------- Wiki 索引 ----------
+.wiki-list
+  margin 0
+  padding 0
+  list-style none
+
+.wiki-entry
+  display flex
+  align-items baseline
+  justify-content space-between
+  gap 1em
+  padding .75em 0
+  border-bottom 1px solid var(--grey-4, #eee)
+
+  &:last-child
+    border-bottom none
+
+  a
+    font-size .96em
+    font-weight 600
+    color var(--theme-color, #49b1ab)
+
+.wiki-updated
+  flex-shrink 0
+  font-size .72em
+  color var(--grey-6, #888)
+
+// ---------- 窄屏适配 ----------
+@media (max-width: 600px)
+  .stat-grid
+    grid-template-columns repeat(2, 1fr)
+
+  .wiki-entry
+    flex-direction column
+    gap .2em

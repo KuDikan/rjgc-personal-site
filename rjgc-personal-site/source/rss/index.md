@@ -21,13 +21,9 @@ date: 2026-10-07
 ## 站内聚合的外部订阅
 
 下表是本站聚合的外部信息源。原始订阅地址见
-`scripts/feeds.json`，抓取结果写入 `source/_data/rss-items.json`。
+`tools/feeds.config.json`，抓取结果写入 `source/_data/rss-items.json`。
 
-<div id="rss-list" class="rss-list">
-  <p class="loading">正在加载订阅数据…</p>
-</div>
-
-若一直显示加载中，执行 `npm run data` 重新抓取。
+{% rss_items %}
 
 ## RSS 与 Atom 的区别
 
