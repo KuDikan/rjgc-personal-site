@@ -42,6 +42,17 @@ Hexo 是**静态生成器**：`source/_data/*.json` 在构建期即可渲染进 
 外部数据（arXiv 论文、RSS）一律视为不可信：文本经 escapeHTML 转义，
 href 经 safeUrl 白名单（仅 http/https 与站内绝对路径）。
 
+## 导航菜单约定
+
+菜单写法决定是否出下箭头（见主题 `layout/_partials/sidebar/menu.pug`）：
+- **单值** `key: /path/ || icon` → 无箭头，用于单入口分区
+- **对象** `key: {default: ...}` → **带箭头**，即使只有 default 一个子项也会出
+
+只有真正多入口的分区才用对象（本站仅 `posts`：文章/归档/标签）。
+菜单文案走 `source/_data/languages.yml` 补齐自定义键的中文。
+**该文件语种键必须在顶层**（`zh-CN:`），写成 `languages: {zh-CN: ...}`
+会让主题取到 `undefined`、覆盖静默失效。
+
 ## ShokaX 主题的三个坑（已规避，勿回退）
 
 1. 随机封面走 `source/_data/images.yml`（根节点直接是数组，≥6 张），不是主题配置
@@ -56,10 +67,10 @@ href 经 safeUrl 白名单（仅 http/https 与站内绝对路径）。
 未渲染的 feed（文件存在/size 够/HTTP 200）和未填充的占位 div 都是"三道检查全放行但实际是坏的"。
 
 `tools/validate.mjs` 会检查站内死链、feed 是否真的渲染、
-数据面板是否已构建期渲染、AGPL 署名链接是否存在。
+数据面板是否已构建期渲染、导航栏中文文案与箭头状态、AGPL署名链接是否存在。
 
-判断"占位未渲染"时不要匹配裸的 `/loading/`：主题自带加载动画会输出 loading 相关 class，
-造成假警报。匹配中文文案"正在加载"与 `class="loading"`。
+**写校验断言后必须做注入回归测试**——断言"通过"可能只是断言没生效。
+踩过两次：正则跨 `</li>` 匹配到错误节点；注入脚本自身因空白不匹配而假通过。
 
 `footer.powered` 必须保持 `true` —— ShokaX 是 AGPL-3.0-or-later，页脚需保留指向主题仓库的署名链接。
 不修改主题源码（主题只从 npm 安装、整目录 gitignored），因此不触发 AGPL §13 网络条款。
