@@ -18,17 +18,17 @@
 
   "observability": {
     "enabled": true
-  }
+  },
 
-  // 自定义域名：声明式绑定（要求 zone 与 Worker 在同一 Cloudflare account）。
-  // 首次部署前先执行 `npx wrangler whoami` 与 `npx wrangler zones list` 确认
-  // kukuku.icu 可见；若不可见（跨 account / token 权限不足），deploy 会直接报错，
-  // 此时应注释掉本段，改为在 Dashboard 一次性绑定：
+  // 自定义域名：声明式绑定（要求 kukuku.icu 这个 zone 与本 Worker 在同一
+  // Cloudflare account，且 token 具备 Zone/DNS/Edit 权限）。
+  // 绑定成功后 wrangler 会自动创建对应 DNS 记录。
+  //
+  // 若 deploy 报权限或 zone 不可见的错误，注释掉本段并在 Dashboard 一次性绑定：
   // Workers & Pages → rjgc-personal-site → Settings → Domains & Routes
   //   → Add → Custom domain → personal-blog.kukuku.icu
-  // 绑定后每次 deploy 域名保持不变，与本文件无关。
-  //
-  // "routes": [
-  //   { "pattern": "personal-blog.kukuku.icu", "custom_domain": true }
-  // ]
+  // 之后每次 deploy 域名保持不变，与本文件无关。
+  "routes": [
+    { "pattern": "personal-blog.kukuku.icu", "custom_domain": true }
+  ]
 }
