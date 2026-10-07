@@ -1,0 +1,67 @@
+# 站点自定义文案（ShokaX 多语言覆盖）
+#
+# 主题的 scripts/generaters/config.js 在 before_generate 阶段执行：
+#     const data = hexo.locals.get('data');
+#     if (data.languages) { mergeLang('zh-CN'); ... }
+# 而 mergeLang 里取的是 data.languages[lang]。
+#
+# 关键：data 本身就是本文件解析后的对象（因为文件名是 languages.yml），
+# 所以语种键必须写在**顶层**，不能再多包一层 languages:。
+# 写成 `languages: {zh-CN: ...}` 会让 data.languages 变成 undefined，
+# 整个覆盖静默失效，菜单回退显示英文键名。
+#
+# 为什么需要覆盖：menu.pug 用 `__('menu.' + name)` 取文案，
+# 而主题自带的 languages/zh-CN.yml 只含它自己的键
+#（home/posts/archives/categories/tags/about/search 等）。
+# papers / rss / wiki / status 是本站自定义键，查不到就显示英文原名。
+#
+# 用主题内置机制而非自写 filter：不必维护插件，也不会与主题的合并顺序冲突。
+
+zh-CN:
+  menu:
+    papers: 论文
+    rss: 订阅
+    wiki: 知识库
+    status: 状态
+    all: 全部文章
+    categories: 分类
+    tags: 标签
+    archives: 归档
+    about: 关于
+    home: 首页
+    statistics: 统计
+    friends: 友链
+
+zh-TW:
+  menu:
+    papers: 論文
+    rss: 訂閱
+    wiki: 知識庫
+    status: 狀態
+    all: 全部文章
+    categories: 分類
+    tags: 標籤
+    archives: 封存
+    about: 關於
+    home: 首頁
+
+zh-HK:
+  menu:
+    papers: 論文
+    rss: 訂閱
+    wiki: 知識庫
+    status: 狀態
+    all: 全部文章
+    categories: 分類
+    tags: 標籤
+    archives: 封存
+    about: 關於
+    home: 首頁
+
+en:
+  menu:
+    papers: Papers
+    rss: Feed
+    wiki: Wiki
+    status: Status
+    all: All Posts

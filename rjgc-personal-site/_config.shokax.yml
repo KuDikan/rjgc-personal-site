@@ -155,23 +155,26 @@ iconfont: "4415496_59g1326wajd"
 
 # ==========================================================================
 #  导航菜单 —— 七个分区
+#
+#  两种写法的区别很关键（见 layout/_partials/sidebar/menu.pug）：
+#   - **单值**（`key: /path/ || icon`）→ 渲染为普通 li.item，**不带下箭头**
+#   - **对象**（`key: { default: ... }`）→ 渲染为 li.item.dropdown，**带下箭头**
+#
+#  只有一个入口的菜单项务必用单值。否则会出现"点击箭头展开，
+#  里面还是同一个页面"的无意义下拉。只有多入口的分区才用对象。
 # ==========================================================================
 menu:
   home: / || home
-  about:
-    default: /about/ || user
+  about: /about/ || user
+  # posts 是真正的多入口分区（列表/归档/标签），保留下拉
   posts:
     default: /categories/ || feather
     archives: /archives/ || list-alt
     tags: /tags/ || tags
-  papers:
-    default: /papers/ || book
-  rss:
-    default: /rss/ || rss
-  wiki:
-    default: /wiki/ || bookmark
-  status:
-    default: /status/ || pulse
+  papers: /papers/ || book
+  rss: /rss/ || rss
+  wiki: /wiki/ || bookmark
+  status: /status/ || pulse
 
 # 评论：v1全部关闭，避免依赖境外服务
 twikoo:

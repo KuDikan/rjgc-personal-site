@@ -262,6 +262,67 @@ for (const [rel, marker, label] of DATA_PAGES) {
 }
 if (!errors.length) console.log(`  [ok] 数据面板 ${DATA_PAGES.length} 个页面均已渲染`);
 
+// ---------- 5c. 导航菜单：中文文案 + 单入口项不应有下箭头 ----------
+
+// 背景：主题 menu.pug 用 `__('menu.' + name)` 取文案，自定义键
+// （papers/rss/wiki/status）不在语言包里就显示英文；且菜单值写成对象时，
+// 即使只有 default 一个子项也会渲染成 li.item.dropdown 并带下箭头，
+// 点开却是同一个页面——纯视觉噪音。
+const navIndexFile = join(PUBLIC_DIR, 'index.html');
+const indexHtml = existsSync(navIndexFile) ? readFileSync(navIndexFile, 'utf8') : '';
+
+const MENU_EXPECT = [
+  ['/papers/', '论文', false],
+  ['/rss/', '订阅', false],
+  ['/wiki/', '知识库', false],
+  ['/status/', '状态', false],
+  ['/about/', '关于', false],
+];
+
+if (!indexHtml) {
+  err('public/index.html 不存在，无法校验导航栏');
+} else {
+for (const [href, label, expectArrow] of MENU_EXPECT) {
+    // 必须精确匹配**同一个** <li>：类名之后不允许跨越 </li>，
+    // 否则惰性匹配会从更早的普通 <li class="item"> 开始，拿到错误的 class。
+    // 类名允许含 dropdown，故用 [^\"]* 捕获后另行判断。
+    const liRe = new RegExp(
+      '<li class="(item[^"]*)">((?:(?!</li>)[\\s\\S]){0,400}?)</li>', 'i'
+    );
+    let cls = null;
+    let text = '';
+    let re = new RegExp(
+      `<li class="(item[^"]*)">((?:(?!</li>)[\\s\\S]){0,400}?${href.replace(/\//g, '\\/')}(?:(?!</li>)[\\s\\S]){0,200}?)</li>`,
+      'i'
+    );
+    let m = re.exec(indexHtml);
+    if (!m) {
+      // 回退：逐个 <li> 扫描，避免正则跨块
+      const liAll = indexHtml.match(/<li class="item[^"]*">[\s\S]*?<\/li>/gi) || [];
+      for (const li of liAll) {
+        if (li.includes(`href="${href}"`)) { m = [li, (li.match(/class="(item[^"]*)"/i) || [])[1], li]; break; }
+      }
+    }
+    if (!m) {
+      err(`导航栏缺少指向 ${href} 的菜单项`);
+      continue;
+    }
+    cls = (m[1] || '') + ' ' + ((m[2] || '').match(/class="(item[^"]*)"/i) || [])[1];
+    const liHtml = m[0];
+    text = liHtml.replace(/<[^>]+>/g, '').replace(/\s+/g, '');
+    if (!text.includes(label)) {
+      err(`导航 ${href} 的文案不是"${label}"（实际含：${text.slice(0, 40)}）—— ` +
+          '检查 source/_data/languages.yml 的结构：语种键必须在顶层，不能多包一层 languages:');
+    }
+    const hasArrow = cls.includes('dropdown');
+    if (hasArrow !== expectArrow) {
+      err(`导航 ${label}（${href}）下箭头状态不符：期望 ${expectArrow ? '有' : '无'}，实际 ${hasArrow ? '有' : '无'}` +
+          '——单入口的菜单项在 _config.shokax.yml 里必须用单值写法而非对象。');
+    }
+  }
+  if (!errors.length) console.log(`  [ok] 导航栏 ${MENU_EXPECT.length} 项中文文案与箭头状态正确`);
+}
+
 // ---------- 6. 占位内容检查 ----------
 
 function validatePlaceholders() {
