@@ -116,22 +116,42 @@ jobs:
           path: rjgc-personal-site/public
 
       - name: 部署到 Cloudflare
+        id: deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx --no-install wrangler deploy
 
+      # 自定义域名尚未绑定时不能判为失败：workers.dev 在部分网络（含中国大陆）
+      # 会被 DNS 污染而不可达，但 Worker 本身部署成功。因此分两步：
+      #   1) 必测 workers.dev —— 它由 wrangler 分配，与域名绑定无关；
+      #   2) 若personal-blog.kukuku.icu 已解析，则额外测一遍并给出提示。
       - name: 冒烟测试
         run: |
           set -e
-          base="https://personal-blog.kukuku.icu"
-          for p in / /about/ /papers/ /wiki/ /status/ /rss/ \
-                   /categories/ /archives/ /tags/ /rss.xml /atom.xml /feed.json; do
+          paths="/ /about/ /papers/ /wiki/ /status/ /rss/ /categories/ /archives/ /tags/ /rss.xml /atom.xml /feed.json"
+          base="${{ steps.deploy.outputs.deployment-url }}"
+          base="${base%/}"
+          echo "== 必测地址: $base =="
+          for p in $paths; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "$base$p")
-            echo "$p -> $code"
+            echo "  $p -> $code"
             test "$code" = "200" || { echo "冒烟失败: $p 返回 $code"; exit 1; }
           done
           # AGPL-3.0 §7(b)：必须保留指向主题仓库的署名链接
           curl -s "$base/" | grep -qi 'theme-shoka-x/hexo-theme-shokax' \
-            && echo '署名链接存在: OK' \
-            || { echo '缺少 ShokaX 署名链接'; exit 1; }
+            && echo '  署名链接存在: OK' \
+            || { echo '  缺少 ShokaX 署名链接'; exit 1; }
+
+          custom="https://personal-blog.kukuku.icu"
+          if curl -s -o /dev/null --max-time 20 "$custom/"; then
+            echo "== 附加检查自定义域名: $custom =="
+            for p in $paths; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "$custom$p")
+              echo "  $p -> $code"
+              test "$code" = "200" || { echo "自定义域名 $p 返回 $code"; exit 1; }
+            done
+          else
+            echo "::notice::自定义域名 $custom 尚未绑定或当前网络不可达，已跳过该项检查。"
+            echo "::notice::绑定方式见 rjgc-personal-site/wrangler.jsonc 内注释。"
+          fi
