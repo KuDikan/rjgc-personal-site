@@ -20,7 +20,14 @@
     "enabled": true
   },
 
-  // 自定义域名：声明式绑定（要求 kukuku.icu 这个 zone 与本 Worker 在同一
+  // 一旦配置了 routes，wrangler 会默认关闭 workers.dev。
+  // 这里显式保持开启：workers.dev 是"与域名绑定无关"的兜底入口，
+  // 也便于 CI 冒烟测试拿到一个确定可用的地址。
+  // 若你只想保留自定义域名、不暴露 workers.dev，改为 false 即可，
+  // 同时需把 CI 冒烟测试的目标换成 personal-blog.kukuku.icu。
+  "workers_dev": true,
+
+  // 自定义域名：声明式绑定（要求 kukuku.icu 这个 zone 与本Worker 在同一
   // Cloudflare account，且 token 具备 Zone/DNS/Edit 权限）。
   // 绑定成功后 wrangler 会自动创建对应 DNS 记录。
   //
