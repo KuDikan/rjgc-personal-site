@@ -129,7 +129,23 @@ function validatePages() {
   for (const f of ['rss.xml', 'atom.xml', 'feed.json']) {
     const p = join(PUBLIC_DIR, f);
     if (!existsSync(p)) { err(`缺少订阅文件：public/${f}`); continue; }
-    if (statSync(p).size < 50) err(`订阅文件过小，疑似生成失败：public/${f}`);
+    const body = readFileSync(p, 'utf8');
+    if (body.length < 50) { err(`订阅文件过小，疑似生成失败：public/${f}`); continue; }
+
+    // 关键：不能只查"文件存在且非空"。
+    // 缺 hexo-renderer-ejs 时，Hexo 会把 .ejs 模板当作静态资源原样拷贝，
+    // 产出的 rss.xml 里全是<%= config.title %> 这类未渲染的模板语句——
+    // 文件存在、size 也够，但订阅器拿到后完全无法解析。
+    const unrendered = body.match(/<%[-_=]?[\s\S]{0,40}?%>/);
+    if (unrendered) {
+      err(`public/${f} 含未渲染的模板语句（如 ${unrendered[0].replace(/\s+/g, ' ').slice(0, 30)}）` +
+          '—— 该文件是 .ejs 模板被当作静态文件拷贝了。请确认已安装 hexo-renderer-ejs。');
+    }
+    // rss/atom 还应包含真实文章条目，而不只是模板骨架
+    if ((f === 'rss.xml' && !/<item[\s>]/.test(body)) ||
+        (f === 'atom.xml' && !/<entry[\s>]/.test(body))) {
+      err(`public/${f} 中没有任何文章条目（可能是空博客，或模板未被渲染）`);
+    }
   }
   // 防重复 feed：hexo-feed 若与其它 generator 同时启用可能多产出 feed.xml
   if (existsSync(join(PUBLIC_DIR, 'feed.xml'))) {
