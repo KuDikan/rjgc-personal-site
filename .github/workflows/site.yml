@@ -28,8 +28,12 @@ jobs:
       run:
         working-directory: rjgc-personal-site
     env:
-      NODE_ENV: production
       TZ: UTC
+      # 注意：不要设置 NODE_ENV=production。
+      # 站点依赖（hexo、hexo-theme-shokax、wrangler 等）全部声明在 devDependencies，
+      # 而 NODE_ENV=production 会让 `npm ci` 跳过 devDependencies，
+      # 结果 node_modules 为空、构建工具缺失。
+      # NODE_ENV=production: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
