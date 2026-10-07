@@ -1,0 +1,19 @@
+{
+  "counts": {
+    "externalFeeds": 3,
+    "papers": 20,
+    "posts": 4,
+    "rssItems": 30,
+    "sections": 7,
+    "wikiPages": 1
+  },
+  "lastBuild": "2026-10-07",
+  "notes": "计数口径：posts=source/_posts 下非下划线开头的 md 数；wikiPages=source/wiki 下 md 数；sections=导航栏固定七项。",
+  "stack": {
+    "deploy": "Cloudflare Workers",
+    "hexo": "7.3.0",
+    "node": ">=22.0.0",
+    "theme": "shokax",
+    "themeVersion": "0.5.4"
+  }
+}

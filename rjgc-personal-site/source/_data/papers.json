@@ -1,0 +1,318 @@
+{
+  "count": 20,
+  "fetched": 20,
+  "notes": "数据来自 arXiv 官方 API。摘要为论文原始摘要，未做解读；不将预印本描述为已同行评审。",
+  "papers": [
+    {
+      "authors": [
+        "Fouad Bousetouane"
+      ],
+      "id": "2610.07675v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "AI agents are entering production in increasingly consequential environments without a shared semantic standard for what their evaluations actually mean. Scores, traces, judge outputs, and multi juror findings are increasingly used to justify readiness and release decisions, yet they often do not specify what evidence supports a claim, what that evidence can establish, or how the claim leads to a decision.…",
+      "title": "EIO-Agents: The Missing Semantic Layer for AI Agent Evaluation",
+      "url": "https://arxiv.org/abs/2610.07675v1"
+    },
+    {
+      "authors": [
+        "Mohammad Al-Ratrout",
+        "Shayla Sharmin",
+        "Roghayeh Leila Barmaki"
+      ],
+      "id": "2610.07732v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "When several people share a 3D virtual room with an LLM agent, the agent must decide not only what to say, but whether an utterance was addressed to it and, if accessible, what profile information about the others present it may use. To study both problems, we construct LookAway, a controlled corpus of 40 sessions involving 80 distinct personas and an LLM agent (1,200 turns), including ambiguous-addressee turns in which speaker orientation agrees or conflicts with the intended addressee.…",
+      "title": "Who Is Talking to the Agent? LLMs in Multi-User 3D Virtual Environments",
+      "url": "https://arxiv.org/abs/2610.07732v1"
+    },
+    {
+      "authors": [
+        "Yupeng Su",
+        "Jiayi Tian",
+        "Zheng Zhang",
+        "Souvik Kundu"
+      ],
+      "id": "2610.07863v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Long-horizon LLM agents act on an append-only interaction history that is re-sent to the model at every step, so the context and its cost grow with steps until the sessions exceed the context window. Existing methods manage the context through context requirement prediction, relying on additional model calls, heuristic rules, or trained policies.…",
+      "title": "ReFold: Training-Free Reversible Inter-Turn Context Folding for Long-Horizon Agents",
+      "url": "https://arxiv.org/abs/2610.07863v1"
+    },
+    {
+      "authors": [
+        "Jingyu Zhang",
+        "Shruti Palaskar",
+        "Daniel Khashabi",
+        "Benjamin Van Durme",
+        "Leon A. Gatys",
+        "Joseph Yitan Cheng"
+      ],
+      "id": "2610.07935v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "LLM agents are increasingly capable of executing complex tasks and of recursively improving themselves on easy-to-verify objectives such as software engineering and mathematics. Since alignment is much harder to verify, this creates a growing risk of capabilities increasing without appropriate safety alignment, especially as capabilities expand to auto-research and cybersecurity.…",
+      "title": "SIGMA: Self-Improving Alignment Generalization from a Model Spec",
+      "url": "https://arxiv.org/abs/2610.07935v1"
+    },
+    {
+      "authors": [
+        "Brendan King",
+        "Farima Fatahi Bayat",
+        "Jean-Flavien Bussotti",
+        "Pouya Pezeshkpour",
+        "Estevam Hruschka"
+      ],
+      "id": "2610.07948v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "When using an LLM agent in a consequential domain, making an informed decision about whether to trust its output or intervene requires calibrated confidence in the agent's success. Confidence estimation for agents is difficult because evidence about success is distributed across heterogeneous, interdependent steps of an agent's trajectory.…",
+      "title": "Confidence Reasoning Graphs: Structured Confidence Estimation for LLM Agents",
+      "url": "https://arxiv.org/abs/2610.07948v1"
+    },
+    {
+      "authors": [
+        "Deogyong Kim",
+        "Sunghwan Kim",
+        "Sangam Lee",
+        "Wonjae Lee",
+        "Dongha Lee"
+      ],
+      "id": "2610.07960v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Recent advances in agentic search have given large language model (LLM) agents finer control over corpus exploration. However, search interfaces often return matching passages even when feedback about the candidate set would suffice for the next decision, coupling candidate refinement with source-text exposure. We propose IndexAct, an interface for Index-Native Corpus Interaction that separates candidate-set refinement from text inspection.…",
+      "title": "From Delivery to Stateful Exploration: Rethinking the Index for Agentic Search",
+      "url": "https://arxiv.org/abs/2610.07960v1"
+    },
+    {
+      "authors": [
+        "Yiming Xu",
+        "Hongyue Yu",
+        "Beihua Yang",
+        "Zihan Chen",
+        "Yixin Liu",
+        "Zhen Peng",
+        "Bin Shi",
+        "Bo Dong",
+        "Chao Shen",
+        "Irwin King",
+        "Qinghua Zheng"
+      ],
+      "id": "2610.07967v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "As large language model (LLM) agents become increasingly autonomous, they may pursue task performance through deception, raising concerns about their reliable deployment. Existing evaluations show that LLM agents can deceive, but often examine isolated scenarios or narrowly defined conditions, limiting systematic understanding of when deception becomes more likely.…",
+      "title": "DecepEval: A Benchmark for Evaluating Deception in LLM Agents",
+      "url": "https://arxiv.org/abs/2610.07967v1"
+    },
+    {
+      "authors": [
+        "Viraj Bagal",
+        "Raviraja Ganta",
+        "Prabhath Chellingi"
+      ],
+      "id": "2610.08036v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "AI agents are increasingly being programmed to automate knowledge work over large collections of unstructured data. Such automation requires repeatability: when the underlying evidence is unchanged, the agent's categories, priorities, and counts should not shift materially between runs, even if each individual answer appears plausible.…",
+      "title": "Same Feedback, Different Answer: Measuring Run-to-Run Instability in Frontier-Model Customer Feedback Analysis",
+      "url": "https://arxiv.org/abs/2610.08036v1"
+    },
+    {
+      "authors": [
+        "Antoine Edy",
+        "Max Conti",
+        "Victor Xing",
+        "Marc-Antoine Allard",
+        "Nawfal Benhamdane",
+        "Gautier Viaud"
+      ],
+      "id": "2610.08048v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "LLM agents often lack the operational knowledge to act reliably in new environments, as they must discover specific tool behaviors or environment conventions on their own. Without memory of past attempts, they repeat the same mistakes across tasks, leading to more task failures and longer trajectories.…",
+      "title": "DAEDALUS: Bootstrapping Agent Memory from Self-Generated Tasks",
+      "url": "https://arxiv.org/abs/2610.08048v1"
+    },
+    {
+      "authors": [
+        "Yoshinari Fujinuma",
+        "Keisuke Kamahori",
+        "Ryuto Koike",
+        "Abdelrahman Madkour",
+        "Varun Prashant Gangal",
+        "Monty Bichouna",
+        "Martyna Markiewicz",
+        "Shivani Jain",
+        "Duncan Curtis",
+        "Rebecca Qian",
+        "Anand Kannappan"
+      ],
+      "id": "2610.08076v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Frontier LLM agents have been shown to be capable of solving increasingly complex tasks for which humans have measurable solutions. This begs the pertinent question of whether LLM agents can go beyond what humans have already solved. The ability to develop sophisticated strategies to tackle consequential problems becomes paramount as well-trodden, human-developed solutions become insufficient for problems for which we lack context or enough training data.…",
+      "title": "SpeedrunBench: Challenging LLM Agents with Video Game Speedrunning",
+      "url": "https://arxiv.org/abs/2610.08076v1"
+    },
+    {
+      "authors": [
+        "Yunju Kang",
+        "Seonghyeon Cho",
+        "Irene Li",
+        "Yeo-Chan Yoon",
+        "Chanjun Park"
+      ],
+      "id": "2610.08082v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "LLM tool-use agents operate in dynamic environments where many actions carry operational risk. However, most safety mechanisms react only after errors manifest. Existing pre-emptive approaches either fine-tune the agent on chain-of-thought deliberation or compile natural-language guardrails into runtime checks, but they do so without exposing a structural, auditable verdict.…",
+      "title": "POLAR: Ontology-Guided Risk Prevention for Tool-Calling LLM Agents",
+      "url": "https://arxiv.org/abs/2610.08082v1"
+    },
+    {
+      "authors": [
+        "Haneen Najjar",
+        "Luca Scionis",
+        "Haritz Puerto",
+        "Sahar Abdelnabi"
+      ],
+      "id": "2610.08098v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "AI agents increasingly rely on modular third-party \"skills\" that are dynamically selected by skill routers to execute complex tasks. While recent studies highlight the threat of prompt injections embedded in these skills, existing evaluations often assume settings where the malicious skill is already selected for execution. We show that this assumption can substantially overestimate attack success.…",
+      "title": "Surviving the Router: Optimizing Skill Injections for Retrieval and Execution",
+      "url": "https://arxiv.org/abs/2610.08098v1"
+    },
+    {
+      "authors": [
+        "Yibo Li",
+        "Jinhang Qiu",
+        "Zhi Zheng",
+        "Qianyun Guo",
+        "Jiaying Wu",
+        "Shuo Ji",
+        "Bryan Hooi"
+      ],
+      "id": "2610.08215v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Learning from experience is essential for LLM agents to adapt to unfamiliar and dynmaic environments. Evaluating this ability is therefore important for understanding how effectively agents acquire and use new knowledge. Existing benchmarks have sought to evaluate this ability, but they primarily evaluate tasks whose rules are provided in the instructions or already familiar to pretrained models, making it difficult to distinguish learning from interactions from reasoning with existing knowledge…",
+      "title": "Learn2Play Bench: How Well Do LLM Agents Learn from Experience in Unfamiliar Environments?",
+      "url": "https://arxiv.org/abs/2610.08215v1"
+    },
+    {
+      "authors": [
+        "Toby D. Pilditch",
+        "Konstantinos Voudouris",
+        "Alexandra Abbas",
+        "Cozmin Ududec"
+      ],
+      "id": "2610.08364v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Frontier AI evaluations increasingly use open-ended, agentic, long-horizon tasks whose transcripts can span hundreds of pages of outputs and actions from complex multi-agent networks. The observability envelop-the range of what evaluators can reliably infer about an agent's behaviours-is therefore narrowing.…",
+      "title": "Transect: Retaining Observability for Long-Horizon LLM Agent Evaluations",
+      "url": "https://arxiv.org/abs/2610.08364v1"
+    },
+    {
+      "authors": [
+        "Jiaju Chen",
+        "Min Yang",
+        "Jinghua Piao",
+        "Xiaochong Lan",
+        "Xu Xia",
+        "Xiangnan He",
+        "Yong Li"
+      ],
+      "id": "2610.08402v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Multi-turn LLM agents often receive sparse task feedback across several interactions, while generating each response token by token. This creates two related credit-assignment questions: which responses helped achieve the outcome, and which generation decisions mattered within each response? Existing methods typically focus on only one level: turn-level methods evaluate complete responses but do not distinguish the decisions within them; token-level methods can propagate feedback across turns bu…",
+      "title": "VETTA: Coordinating Turn- and Token-Level Credit Assignment for Multi-Turn LLM Agents",
+      "url": "https://arxiv.org/abs/2610.08402v1"
+    },
+    {
+      "authors": [
+        "Lasse B. Strand",
+        "Robert Jakob",
+        "Kevin O'Sullivan",
+        "Markus Kreft"
+      ],
+      "id": "2610.08452v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Retrieval-augmented generation (RAG) is a widely used approach for grounding large language models (LLMs) in external knowledge. However, configuring a pipeline is an expensive hyperparameter optimization problem over many interacting choices, from chunking and embedding model to reranking and generation.…",
+      "title": "Agentic AutoRAG: RAG Pipeline Optimization through Reasoning-Driven Agents",
+      "url": "https://arxiv.org/abs/2610.08452v1"
+    },
+    {
+      "authors": [
+        "Sayan Sinha",
+        "Vipul Harsh",
+        "B. Aditya Prakash",
+        "Vyas Sekar",
+        "Hui Zhang"
+      ],
+      "id": "2610.08622v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "System administrators of Internet-scale services need to resolve failure incidents to maintain reliability of such services. Ideally, we want a troubleshooting system to be: (1) expressive to known and unknown incidents with high accuracy; (2) cost efficient at scale; (3) explainable to provide actionable insights operators can act on; and (4) entail low effort from the operators.…",
+      "title": "Agentic RCA for Internet-Scale Services Using Constrained Creativity",
+      "url": "https://arxiv.org/abs/2610.08622v1"
+    },
+    {
+      "authors": [
+        "Suxin Ji",
+        "Hungtao Wan",
+        "Shaoxuan Chen",
+        "An Zhang"
+      ],
+      "id": "2610.08668v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Behavioral watermarking embeds an owner identifier in an LLM agent's high-level action choices, giving provenance without touching output tokens. Prior agent watermarks break in two ways. First, all three prior schemes bind the watermark to the exact action symbol, so renaming a tool desynchronizes decoding even when the observation is untouched; in AgentMark's own robustness test, paraphrasing the observation alone drops bit-recovery to 16.8%.…",
+      "title": "Semantic Behavioral Watermarking: Paraphrase-Robust and Forgery-Resistant Provenance for LLM Agents",
+      "url": "https://arxiv.org/abs/2610.08668v1"
+    },
+    {
+      "authors": [
+        "Siru Jiang",
+        "Yongzhe Lyu",
+        "Shuo Lu",
+        "Yubin Wang",
+        "Yuxiang Zhang",
+        "Yue Liao",
+        "Bin Wang",
+        "Jian Liang",
+        "Tieniu Tan"
+      ],
+      "id": "2610.08720v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "LLM-based agents are increasingly advancing scientific and engineering problem solving, with physics simulation emerging as a challenging yet practical testbed for reproducing complex physical phenomena with application in embodied AI, games and films. As the workhorse of such simulation, a solver computes how the state of a dynamic system evolves over time.…",
+      "title": "WorldSolver: Can LLM Agents Simulate the Physical Dynamics via Solver Generation?",
+      "url": "https://arxiv.org/abs/2610.08720v1"
+    },
+    {
+      "authors": [
+        "Ankit Sonthalia",
+        "Haritz Puerto",
+        "Alexander Rubinstein",
+        "Martin Gubri",
+        "Seong Joon Oh"
+      ],
+      "id": "2610.08775v1",
+      "published": "2026-10-06",
+      "source": "arXiv",
+      "summary": "Large language models (LLMs) can solve many narrow tasks, but querying them separately for millions of related instances can be prohibitively expensive. Can LLM agents autonomously create cheaper solutions for such workloads? We call this ability \"bottling\": the ability to turn general capabilities into task-specific solutions that balance answer quality and amortised cost.…",
+      "title": "Agent in a Bottle: Can LLM Agents Turn Their Capabilities Into Cheap, Scalable Artifacts?",
+      "url": "https://arxiv.org/abs/2610.08775v1"
+    }
+  ],
+  "query": "all:\"AI agent\" OR all:\"LLM agent\"",
+  "source": "arXiv"
+}

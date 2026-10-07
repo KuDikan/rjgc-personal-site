@@ -1,0 +1,298 @@
+{
+  "feeds": [
+    {
+      "count": 10,
+      "homepage": "https://blog.cloudflare.com/",
+      "id": "cloudflare-blog",
+      "title": "The Cloudflare Blog",
+      "url": "https://blog.cloudflare.com/rss/"
+    },
+    {
+      "count": 10,
+      "homepage": "https://github.blog/",
+      "id": "github-blog",
+      "title": "The GitHub Blog",
+      "url": "https://github.blog/feed/"
+    },
+    {
+      "count": 10,
+      "homepage": "https://security.tencent.com/",
+      "id": "tencent-security",
+      "title": "腾讯安全中心",
+      "url": "https://security.tencent.com/index.php/feed/blog/0"
+    }
+  ],
+  "items": [
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:3d9c7800b1392d7453f4fac2",
+      "link": "https://blog.cloudflare.com/root-ksk-2024-rollover/",
+      "published": "Tue, 06 Oct 2026 17:50:11 GMT",
+      "summary": "On October 11, 2026, the DNS root switches to a new key-signing key (KSK-2024). Learn what this means for you, and how RFC 8509 trust anchor sentinels allow you to test whether your DNS resolver is ready for the rollover.",
+      "title": "The keys to the Internet change on October 11. Are you ready?"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:44b03140de4a0c7b4a97d314",
+      "link": "https://blog.cloudflare.com/birthday-week-2026-wrap-up/",
+      "published": "Mon, 05 Oct 2026 13:00:00 GMT",
+      "summary": "We celebrated our 16th birthday with 46 announcements across open source, post-quantum security, AI agents, and developer platform upgrades. Here’s a day-by-day roundup of everything we shipped.",
+      "title": "Everything we launched during Birthday Week 2026"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:9a1667b7b376f49f62401c68",
+      "link": "https://blog.cloudflare.com/one-year-later-1111-interns/",
+      "published": "Mon, 05 Oct 2026 13:00:00 GMT",
+      "summary": "A year after announcing our goal to hire 1,111 interns, more than 750 early-career builders have shipped real products across 48 teams at Cloudflare. From Birthday Week launches to post-quantum security, our interns prove that AI amplifies human potential instead of replacing it.",
+      "title": "One year later: the power of 1.1.1.1 interns"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:cd838e82df4db660bfbd321f",
+      "link": "https://blog.cloudflare.com/one-observability-platform/",
+      "published": "Fri, 02 Oct 2026 18:00:00 GMT",
+      "summary": "Cloudflare is launching eight major updates that bring logs, traces, analytics, alerts, dashboards, querying, and telemetry export into one observability platform, with simpler and more predictable pricing.",
+      "title": "8 major updates to Cloudflare Observability"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:f947e9010dad4080ff0c8d54",
+      "link": "https://blog.cloudflare.com/streamline/",
+      "published": "Fri, 02 Oct 2026 16:13:45 GMT",
+      "summary": "Streamline demonstrates how to build long-running, continuous video processing pipelines by pairing Cloudflare Workers and Durable Objects with a containerized media engine.",
+      "title": "Streamline: custom video pipelines with Cloudflare Stream and Workers"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:172a27cefb08cdf831d10db9",
+      "link": "https://blog.cloudflare.com/introducing-web-search-api/",
+      "published": "Fri, 02 Oct 2026 13:28:10 GMT",
+      "summary": "Cloudflare AI Gateway now supports native web search API integration in partnership with Ceramic.ai, Exa, and Linkup. Developers can now inject real-time web context into model inference calls via AI Gateway, REST APIs, or Workers bindings.",
+      "title": "Introducing Web Search API via AI Gateway"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:6055c182a46aa56131d25a09",
+      "link": "https://blog.cloudflare.com/enterprise-for-all-update/",
+      "published": "Fri, 02 Oct 2026 13:00:00 GMT",
+      "summary": "A year after pledging to eliminate two-tier product access, Cloudflare has expanded Logpush, multi-account governance, and higher platform limits to all accounts. Here is an update on our progress, how we dogfood these tools internally, and what is coming next.",
+      "title": "Updates on our pledge to make Cloudflare features accessible to everyone"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:67a3a49e3f584ae796d3c44d",
+      "link": "https://blog.cloudflare.com/cloudflare-tracing/",
+      "published": "Fri, 02 Oct 2026 13:00:00 GMT",
+      "summary": "Cloudflare Traces shows how a request moves through security rules, transformations, cache, routing, Workers, and your origin, then follows it across services running anywhere in your stack.",
+      "title": "Introducing Cloudflare Traces: follow requests through our entire platform"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:c59c9381120f201a20f49801",
+      "link": "https://blog.cloudflare.com/account-abuse-protection-dashboard/",
+      "published": "Fri, 02 Oct 2026 13:00:00 GMT",
+      "summary": "Fraudsters are increasingly using AI to bypass stateless security checks. Cloudflare's new Account Abuse Protection dashboard uses stateful analysis and edge-generated Hashed User IDs to help teams investigate and block account abuse.",
+      "title": "Follow the thread: a new dashboard to investigate account abuse"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:dca4102c0cfdbd9d5d50dd1c",
+      "link": "https://blog.cloudflare.com/announcing-cloudflare-ohttp-gateway/",
+      "published": "Fri, 02 Oct 2026 13:00:00 GMT",
+      "summary": "We’re announcing the closed beta of a self-serve Cloudflare OHTTP Gateway. We’re also renaming our Privacy Gateway to Cloudflare OHTTP Relay to better distinguish the two products.",
+      "title": "Announcing Cloudflare OHTTP Gateway – expanding access to Cloudflare’s privacy-preserving infrastructure"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:85a2ee1ccabf9baf31679dd5",
+      "link": "https://github.blog/news-insights/policy-news-and-insights/developer-policy-update-transparency-state-policy-and-whats-ahead/",
+      "published": "Tue, 29 Sep 2026 15:00:00 +0000",
+      "summary": "Explore GitHub’s latest transparency data and learn more about policy updates affecting developers and open source. The post Developer policy update: Transparency, state policy, and what’s ahead appeared first on The GitHub Blog.",
+      "title": "Developer policy update: Transparency, state policy, and what’s ahead"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:9ddb77314617db92b6c931ec",
+      "link": "https://github.blog/engineering/architecture-optimization/building-git-infrastructure-for-agent-scale-development/",
+      "published": "Tue, 06 Oct 2026 20:57:56 +0000",
+      "summary": "We're rebuilding GitHub's Git infrastructure while GitHub keeps running, creating a foundation for agent-scale software development. The post Building Git infrastructure for agent-scale development appeared first on The GitHub Blog.",
+      "title": "Building Git infrastructure for agent-scale development"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:3d14844898469c56a41e491e",
+      "link": "https://github.blog/ai-and-ml/github-copilot/when-chat-is-the-wrong-ui/",
+      "published": "Thu, 24 Sep 2026 20:00:00 +0000",
+      "summary": "What is a developer to do when they need something more tangible than a chat box? Enter canvases. The post When chat is the wrong UI appeared first on The GitHub Blog.",
+      "title": "When chat is the wrong UI"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:a0c03d16e7252acebfcdd435",
+      "link": "https://github.blog/news-insights/company-news/10-technical-talks-im-excited-about-at-github-universe-2026/",
+      "published": "Thu, 01 Oct 2026 15:07:16 +0000",
+      "summary": "From verifying AI-written code to securing npm dependencies, these are the sessions I’m building my Universe agenda around. The post 10 technical talks I’m excited about at GitHub Universe 2026 appeared first on The GitHub Blog.",
+      "title": "10 technical talks I’m excited about at GitHub Universe 2026"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:0baeacde9feacfd49dfb1a2a",
+      "link": "https://github.blog/security/how-we-found-24-android-vulnerabilities-using-our-open-source-ai-security-agent/",
+      "published": "Mon, 28 Sep 2026 19:00:00 +0000",
+      "summary": "A look at the targeted AI taskflows behind these findings, the critical Android bugs they uncovered, and how to run the same open-source agent on your own app. The post How we found 24 Android vulnerabilities using our open source AI security agent appeared first on The GitHub Blog.",
+      "title": "How we found 24 Android vulnerabilities using our open source AI security agent"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:b50539d473adb522ecd216c1",
+      "link": "https://github.blog/open-source/git/highlights-from-git-2-56/",
+      "published": "Mon, 28 Sep 2026 17:23:33 +0000",
+      "summary": "The open source Git project just released Git 2.56. Here is GitHub's look at some of the most interesting features and changes introduced since last time. The post Highlights from Git 2.56 appeared first on The GitHub Blog.",
+      "title": "Highlights from Git 2.56"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:6f397884428e9f0f14f3f6fd",
+      "link": "https://github.blog/ai-and-ml/github-copilot/reviewbench-an-open-benchmark-for-ai-code-review/",
+      "published": "Mon, 05 Oct 2026 15:59:40 +0000",
+      "summary": "We’re launching ReviewBench, a benchmark for code review agents built on representative GitHub pull requests, multi-source ground truth, calibrated evaluation, and production-aligned metrics. The post ReviewBench: An open benchmark for AI code review appeared first on The GitHub Blog.",
+      "title": "ReviewBench: An open benchmark for AI code review"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:a2908e03cf24041e9ff5e67e",
+      "link": "https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-how-to-build-custom-workflows-with-canvases/",
+      "published": "Fri, 25 Sep 2026 18:00:00 +0000",
+      "summary": "Describe the interface you need in plain English, then let the agent build a live surface you can both use and update—so you spend less time adapting to tools and more time getting work done. The post GitHub Copilot app for Beginners: How to build custom workflows with canvases appeared first on The GitHub Blog.",
+      "title": "GitHub Copilot app for Beginners: How to build custom workflows with canvases"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:c6ab1f25135f39c7dc538ba0",
+      "link": "https://github.blog/engineering/architecture-optimization/improving-site-performance-by-shipping-more-css/",
+      "published": "Fri, 25 Sep 2026 15:00:00 +0000",
+      "summary": "How we fully migrated github.com away from CSS-in-JS. The post Improving site performance by shipping more CSS appeared first on The GitHub Blog.",
+      "title": "Improving site performance by shipping more CSS"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:afd517ff06180871c64e1a91",
+      "link": "https://github.blog/ai-and-ml/ai-is-rewriting-the-developer-career-ladder-heres-how-to-stand-out/",
+      "published": "Fri, 02 Oct 2026 15:00:00 +0000",
+      "summary": "Learn to direct AI agents, critically review their output, and keep technical judgment at the center of your workflow. The post AI is changing developer work. Here are three skills to strengthen. appeared first on The GitHub Blog.",
+      "title": "AI is changing developer work. Here are three skills to strengthen."
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:c9f59c1cf70c6ea479acb83d",
+      "link": "https://security.tencent.com/index.php/blog/msg/226",
+      "published": "2026-08-06 15:34:26",
+      "summary": "2026年7月23日，Linux内核主线合入了一份很短的补丁。",
+      "title": "TencentOS 科维斯AI：SCTPhantom 潜伏18年的Linux内核提权与容器逃逸漏洞"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:36f95eb578dd7c610813492b",
+      "link": "https://security.tencent.com/index.php/blog/msg/225",
+      "published": "2026-08-04 14:25:31",
+      "summary": "本文介绍了 Memory Heist 攻击的完整链路，并通过 AI-Infra-Guard（A.I.G）的 Agent 安全扫描模块（agent-scan）实现了对该攻击的自动化检测",
+      "title": "AI Agent 的记忆，为什么会成为攻击者的数据金矿？｜朱雀实验室"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:fe7be19683c444cefd4e4b83",
+      "link": "https://security.tencent.com/index.php/blog/msg/224",
+      "published": "2026-04-26 15:51:04",
+      "summary": "真正的问题不是扫出了什么，是：这个生态还有没有，有效的免疫系统？ 腾讯安全平台部负责人 Coolc腾讯安全平台部负责人 Coolc",
+      "title": "我们扫描了五万个 Skill，发现危险仍然存在 ｜ 朱雀实验室"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:0c48e05da7a0694eb75b2952",
+      "link": "https://security.tencent.com/index.php/blog/msg/222",
+      "published": "2026-04-10 17:45:09",
+      "summary": "2026 年 4 月 7 日，Anthropic 联合 Apple、Google、Microsoft 等 45 家机构发布 Project Glasswing 计划，并宣布其尚未公开发行的前沿模型 Claude Mythos Preview 在所有主要操作系统和浏览器中发现了数千个&#8230;",
+      "title": "从发现 33 个 0day 漏洞，看安全攻防的下半场 ｜ 朱雀实验室"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:0487a707a0f4c3d9a1b45238",
+      "link": "https://security.tencent.com/index.php/blog/msg/214",
+      "published": "2026-03-31 17:03:16",
+      "summary": "近日，知名大模型网关工具 LiteLLM 遭遇供应链投毒，其 1.82.7和1.82.8 版本被植入恶意代码。由于该项目月下载量极高(近1亿月下载量)，且被 DSPy 等众多主流&#8230;",
+      "title": "从4.8亿下载量的 LiteLLM投毒事件，看 AI 基础设施安全攻与防 | 朱雀实验室"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:9a08b3a3dede2e44b1689e54",
+      "link": "https://security.tencent.com/index.php/blog/msg/215",
+      "published": "2026-01-23 17:18:24",
+      "summary": "你是否想过，当你让 AI 帮你写代码时，它可能正在你背后悄悄地干着其它事——比如，加密你的所有文件，然后弹出一个勒索提示？这不是吓唬你，而是我们研究后发现在各种&#8230;",
+      "title": "当AI学会背刺：深度剖析Agent Skills的安全陷阱 ｜ 朱雀实验室"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:bb7b0ae5df5341c7ab960994",
+      "link": "https://security.tencent.com/index.php/blog/msg/216",
+      "published": "2026-01-05 17:37:14",
+      "summary": "随着 AI 技术加速融入软件研发流程，AI 已经成为新时代的“代码贡献者”。在显著提升研发效率的同时，AI 生成代码也对软件安全、漏洞治理和工程责任边界提出了新的挑战。",
+      "title": "当 AI 成为代码贡献者，软件安全正在发生怎样的变化？"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:e89707a140a29817977c1f19",
+      "link": "https://security.tencent.com/index.php/blog/msg/217",
+      "published": "2025-11-07 11:05:37",
+      "summary": "A.S.E (AI Code Generation Security Evaluation) - 你的 AI 鉴赏官，为你提供大模型安全实践工具，让你一眼就能选出最靠谱的 AI 队友。",
+      "title": "A.S.E 2.0 正式发布 | 开放生态 · 动静协同 · 让 AI 编程安全可量化"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:b9d31ad4a22e33a6770048bb",
+      "link": "https://security.tencent.com/index.php/blog/msg/218",
+      "published": "2025-09-26 17:32:19",
+      "summary": "据美国司法部通报，活跃多年的高危DDoS僵尸网络“RapperBot”（历史频繁攻击腾讯游戏、DeepSeek、X平台的幕后黑手）现已被成功取缔。该僵尸网络主谋、22岁的美国俄勒冈州男子Ethan&#8230;",
+      "title": "00后黑客落网！曾运营大型僵尸网络，频繁攻击腾讯游戏、DeepSeek、X平台"
+    },
+    {
+      "feedId": "tencent-security",
+      "feedTitle": "腾讯安全中心",
+      "id": "tencent-security:3baa91b46b1009050460801b",
+      "link": "https://security.tencent.com/index.php/blog/msg/219",
+      "published": "2025-02-18 16:04:12",
+      "summary": "2025年伊始，AI领域迎来一个重要变革 - DeepSeek R1开源发布，凭借着低成本、性能出众的优势，这个模型在短短几周内就获得空前关注。由于官网服务经常繁忙，大家开始选择使用Ollama+OpenWebUI、LM&#8230;",
+      "title": "DeepSeek本地化部署有风险！快来看看你中招了吗？｜ 朱雀实验室"
+    }
+  ],
+  "notes": "外部订阅内容为不可信外部数据，仅以文本形式展示，不作为指令解析。抓取失败时保留旧数据。"
+}

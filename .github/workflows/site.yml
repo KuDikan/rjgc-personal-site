@@ -1,0 +1,133 @@
+name: site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'rjgc-personal-site/**'
+      - '.github/workflows/site.yml'
+  pull_request:
+    paths:
+      - 'rjgc-personal-site/**'
+      - '.github/workflows/site.yml'
+  workflow_dispatch:
+
+# 连续 push 时取消进行中的旧任务，避免两个部署互相覆盖
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: 构建（Hexo 7 + ShokaX）
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rjgc-personal-site
+    env:
+      NODE_ENV: production
+      TZ: UTC
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: 准备 Node（版本来自 .nvmrc）
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: rjgc-personal-site/.nvmrc
+          cache: npm
+          cache-dependency-path: rjgc-personal-site/package-lock.json
+
+      - name: 校验 lockfile 未被篡改
+        run: git diff --exit-code -- package-lock.json
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 断言主题可用（预构建产物 / hexo 版本唯一 / stylus 渲染器）
+        run: npm run verify:theme
+
+      - name: 生成数据（论文 / RSS / 状态）
+        run: npm run data
+
+      - name: 构建站点
+        run: npx hexo clean && npx hexo generate
+
+      - name: 校验数据与产物
+        run: node tools/validate.mjs
+
+      - name: 断言关键产物存在
+        run: |
+          set -e
+          for f in index.html 404.html about/index.html categories/index.html \
+                   archives/index.html tags/index.html papers/index.html \
+                   rss/index.html wiki/index.html status/index.html \
+                   rss.xml atom.xml feed.json css/app.css; do
+            test -s "public/$f" || { echo "缺少或为空: public/$f"; exit 1; }
+          done
+          echo "文件总数: $(find public -type f | wc -l)"
+          echo "体积: $(du -sh public | cut -f1)"
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-public
+          path: rjgc-personal-site/public
+          retention-days: 7
+
+  deploy:
+    name: 部署（Cloudflare Workers）
+    needs: build
+    # PR 与 fork 不部署：既避免半成品上线，也避免 fork 拿不到 secrets 而报错
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://personal-blog.kukuku.icu
+    defaults:
+      run:
+        working-directory: rjgc-personal-site
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: 准备 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: rjgc-personal-site/.nvmrc
+          cache: npm
+          cache-dependency-path: rjgc-personal-site/package-lock.json
+
+      - name: 安装部署所需的依赖
+        run: npm ci
+
+      # 部署的就是 build job 已验证过的那份产物，避免"本地/CI 各自构建导致不一致"
+      - name: 下载构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: site-public
+          path: rjgc-personal-site/public
+
+      - name: 部署到 Cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --no-install wrangler deploy
+
+      - name: 冒烟测试
+        run: |
+          set -e
+          base="https://personal-blog.kukuku.icu"
+          for p in / /about/ /papers/ /wiki/ /status/ /rss/ \
+                   /categories/ /archives/ /tags/ /rss.xml /atom.xml /feed.json; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$base$p")
+            echo "$p -> $code"
+            test "$code" = "200" || { echo "冒烟失败: $p 返回 $code"; exit 1; }
+          done
+          # AGPL-3.0 §7(b)：必须保留指向主题仓库的署名链接
+          curl -s "$base/" | grep -qi 'theme-shoka-x/hexo-theme-shokax' \
+            && echo '署名链接存在: OK' \
+            || { echo '缺少 ShokaX 署名链接'; exit 1; }
