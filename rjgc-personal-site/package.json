@@ -1,0 +1,42 @@
+{
+  "name": "rjgc-personal-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal site built with Hexo 7 + ShokaX, deployed to Cloudflare Workers",
+  "license": "UNLICENSED",
+  "hexo": {
+    "version": "7.3.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "clean": "hexo clean",
+    "gen": "hexo generate",
+    "build": "npm run clean && npm run gen || npm run gen",
+    "dev": "hexo server",
+    "preview": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "verify:theme": "node tools/verify-theme.mjs",
+    "data": "node tools/build-data.mjs",
+    "data:validate": "node tools/validate.mjs",
+    "ci:build": "npm run verify:theme && npm run data && npm run data:validate && npm run build"
+  },
+  "devDependencies": {
+    "hexo": "7.3.0",
+    "hexo-generator-archive": "2.0.0",
+    "hexo-generator-category": "2.0.0",
+    "hexo-generator-index": "4.0.0",
+    "hexo-generator-search": "2.4.3",
+    "hexo-generator-tag": "2.0.0",
+    "hexo-renderer-aether": "0.0.6",
+    "hexo-renderer-stylus": "3.0.1",
+    "hexo-theme-shokax": "0.5.4",
+    "nyx-player": "0.1.1",
+    "shokax-uikit": "0.0.5",
+    "wrangler": "4.147.0"
+  },
+  "overrides": {
+    "hexo": "7.3.0"
+  }
+}

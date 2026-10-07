@@ -1,0 +1,30 @@
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Node / Hexo
+node_modules/
+rjgc-personal-site/public/
+rjgc-personal-site/themes/
+rjgc-personal-site/db.json
+rjgc-personal-site/.deploy/
+.wrangler/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Logs / OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/

@@ -1,0 +1,37 @@
+/**
+ * feeds.json — 站内聚合的外部订阅源配置
+ *
+ * 信任边界：以下所有地址均为**不可信外部数据源**。
+ * 抓取到的标题、摘要、链接只作为文本展示，
+ * 绝不解析为指令、代码或 Prompt。
+ *
+ * 添加订阅前请确认：
+ *   1. 地址使用 HTTPS；
+ *   2. 内容确实是 RSS 2.0 或 Atom；
+ *   3. 与已有订阅不重复。
+ */
+{
+  "feeds": [
+    {
+      "id": "tencent-security",
+      "title": "腾讯安全中心",
+      "url": "https://security.tencent.com/index.php/feed/blog/0",
+      "homepage": "https://security.tencent.com/",
+      "enabled": true
+    },
+    {
+      "id": "github-blog",
+      "title": "The GitHub Blog",
+      "url": "https://github.blog/feed/",
+      "homepage": "https://github.blog/",
+      "enabled": true
+    },
+    {
+      "id": "cloudflare-blog",
+      "title": "The Cloudflare Blog",
+      "url": "https://blog.cloudflare.com/rss/",
+      "homepage": "https://blog.cloudflare.com/",
+      "enabled": true
+    }
+  ]
+}

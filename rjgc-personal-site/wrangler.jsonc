@@ -1,0 +1,34 @@
+{
+  // Cloudflare Workers —— 仅托管静态资源（无 Worker 脚本、无 SSR）
+  // wrangler.jsonc 支持注释，故使用 jsonc 而非 json
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rjgc-personal-site",
+  "compatibility_date": "2026-01-15",
+
+  "assets": {
+    "directory": "./public",
+    // 默认即 "none"，此处显式写出：命中不到资源时若存在 public/404.html 则返回它。
+    // 切勿改成 "single-page-application" —— 本站是多页结构，
+    // 那样会把所有 404 回退到 index.html，导致各分区链接错乱。
+    "not_found_handling": "none",
+    // 配合 Hexo 默认 permalink（:title/，产出 <slug>/index.html）
+    // 若改动 _config.yml 的 permalink，必须同步调整此项，否则全站 404
+    "html_handling": "auto-trailing-slash"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+
+  // 自定义域名：声明式绑定（要求 zone 与 Worker 在同一 Cloudflare account）。
+  // 首次部署前先执行 `npx wrangler whoami` 与 `npx wrangler zones list` 确认
+  // kukuku.icu 可见；若不可见（跨 account / token 权限不足），deploy 会直接报错，
+  // 此时应注释掉本段，改为在 Dashboard 一次性绑定：
+  // Workers & Pages → rjgc-personal-site → Settings → Domains & Routes
+  //   → Add → Custom domain → personal-blog.kukuku.icu
+  // 绑定后每次 deploy 域名保持不变，与本文件无关。
+  //
+  // "routes": [
+  //   { "pattern": "personal-blog.kukuku.icu", "custom_domain": true }
+  // ]
+}

@@ -1,0 +1,183 @@
+# ==========================================================================
+# 站点基础
+#  个人资料为占位信息，需要替换时改这里 + source/about/index.md
+# ==========================================================================
+title: personal-blog
+subtitle: Hexo + ShokaX 驱动的个人站点
+description: 一个由 Hexo 与 ShokaX 构建的个人网站，包含博客、论文订阅、个人 Wiki 与状态面板。
+keywords: hexo, shokax, blog, 静态博客, cloudflare
+author: Ku
+language: zh-CN
+timezone: Asia/Shanghai
+
+url: https://personal-blog.kukuku.icu
+root: /
+permalink: :title/
+
+# 站点 RSS 输出（由主题自带的 hexo-feed 生成，无需另装 hexo-generator-feed）
+feed:
+  limit: 20
+  order_by: "-date"
+  tag_dir: false
+  category_dir: false
+  rss:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/rss.ejs"
+    output: "rss.xml"
+  atom:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/atom.ejs"
+    output: "atom.xml"
+  jsonFeed:
+    enable: true
+    template: "node_modules/hexo-theme-shokax/layout/_alternate/json.ejs"
+    output: "feed.json"
+
+# ==========================================================================
+# 主题
+# ==========================================================================
+theme: shokax
+
+# 关闭 ShokaX 默认的高开销动画与外部服务，减少首屏负担与境外 CDN 依赖
+pretty_urls:
+  trailing_index: false
+  trailing_html: false
+
+# ==========================================================================
+# Markdown / 渲染器
+# 渲染器 hexo-renderer-aether 已由主题自带，无需重复安装
+# ==========================================================================
+markdown:
+  render:
+    html: false          # 过滤 HTML 标签，防注入
+    xhtmlOut: true
+    breaks: true
+    linkify: true
+    typographer:
+      quotes: "“”‘’"
+  plugins:
+    # shoka 系主题必须这样设置 toc/anchor 的 class 名
+    - plugin:
+        name: markdown-it-toc-and-anchor
+        enable: true
+        options:
+          tocClassName: "toc"
+          anchorClassName: "anchor"
+    - plugin:
+        name: markdown-it-multimd-table
+        enable: true
+        options:
+          multiline: true
+          rowspan: true
+          headerless: true
+    # 注音与剧透插件依赖相对路径解析基准，跨环境不稳定，v1 先不启用：
+    # - plugin:
+    #     name: ./markdown-it-furigana
+    #     enable: true
+    #     options:
+    #       fallbackParens: "()"
+    # - plugin:
+    #     name: ./markdown-it-spoiler
+    #     enable: true
+    #     options:
+    #       title: "你知道得太多了"
+
+# ShokaX >= 7.0.0-rc1 使用此开关关闭默认代码高亮，改由渲染器自行处理
+syntax_highlighter: false
+
+# ==========================================================================
+# 压缩与优化
+# v1 全部关闭：文档明确警告 minify.html 可能产出错误 HTML，
+# minify.image 在 CI 部署下会导致图片 404。上线稳定后再逐项开启。
+# ==========================================================================
+minify:
+  js:
+    enable: false        # ShokaX 自带 esbuild 优化
+    exclude:
+  css:
+    enable: false
+    options:
+      targets: ">= 0.5%"
+    exclude:
+  html:
+    minifier: html-minifier
+    enable: false
+    options:
+      comments: false
+    exclude:
+  image:
+    # 注意：CI 部署时开启会导致线上图片 404，务必保持false
+    enable: false
+    options:
+      avif: false
+      webp: true
+      quality: 80
+      effort: 2
+      replaceSrc: false
+    exclude:
+
+# ==========================================================================
+# 生成器
+# ==========================================================================
+archive_generator:
+  per_page: 20
+  yearly: true
+  monthly: true
+  daily: false
+
+category_generator:
+  per_page: 20
+
+tag_generator:
+  per_page: 20
+
+index_generator:
+  path: ""
+  per_page: 20
+  order_by: "-date"
+
+# ==========================================================================
+# 目录与忽略
+# ==========================================================================
+source_dir: source
+public_dir: public
+tag_dir: tags
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+# ==========================================================================
+# 已知的主题限制（v1 规避，勿踩）
+#
+# 1. **page 的 frontmatter 不要写 tags**。
+#    ShokaX 的 head_com.pug 里是 `page?.tags?.toArray()`：
+#    博客文章的 page.tags 是 Hexo 的 Tag Model（Query 对象，有 toArray），
+#    但独立页面（layout: page）在 frontmatter 里声明 tags 后拿到的是**普通数组**，
+#    没有 toArray 方法，于是抛TypeError 并导致该页渲染为 0 字节。
+#    标签只对 _posts 下的文章有效，页面需要分类请用 categories 或干脆不写。
+#
+# 2. **source/_data/assets/ 必须是扁平结构**。
+#    主题的 images 生成器对该目录 readdir 后逐个 readFile，
+#    放子目录会触发 EISDIR。
+#
+# 3. **随机封面走 source/_data/images.yml**，不是 _config.shokax.yml。
+#    主题的 before_generate 过滤器会用该文件的内容覆盖 image_list，
+#    且该文件的根节点必须直接是数组（写成 `images: [...]` 会被当成对象而失效）。
+#    少于 6 张会抛 "image_list must have at least 6 items" 并中止构建。
+# ==========================================================================
+
+# 主题资源与依赖不要当页面渲染
+ignore:
+  - "**/_*.md"
+  - README.md
+
+# ==========================================================================
+# 写作计数（主题自带 helper，仅在此声明参数）
+# ==========================================================================
+symbols_count_time:
+  separated: true
+  symbol: 个
+  awl: 4
+  wpm: 300
+  suffix: " 分钟阅读"
