@@ -44,6 +44,15 @@
     {
       "feedId": "cloudflare-blog",
       "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:164b29e358203c9a27931180",
+      "link": "https://blog.cloudflare.com/draft-blog-0091/",
+      "published": "Thu, 08 Oct 2026 13:00:00 GMT",
+      "summary": "We redesigned Cloudflare Radar to make real-time global traffic and outage data accessible to a wider audience — including journalists, less technical researchers, and everyday users. By introducing an interactive map and standardized components, we simplified navigation while preserving technical depth.",
+      "title": "Bridging technical depth and usability: The story behind Radar’s redesign"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
       "id": "cloudflare-blog:44b03140de4a0c7b4a97d314",
       "link": "https://blog.cloudflare.com/birthday-week-2026-wrap-up/",
       "published": "Mon, 05 Oct 2026 13:00:00 GMT",

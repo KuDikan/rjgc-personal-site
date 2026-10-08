@@ -1,4 +1,4 @@
-alternate: Ku
+alternate: ホ篴坎
 statics: /
 assets: assets
 css: css
@@ -23,7 +23,6 @@ image_list:
   - /assets/cover-1.jpg
   - /assets/cover-2.jpg
   - /assets/cover-3.jpg
-  - /assets/cover-4.jpg
   - /assets/cover-5.jpg
   - /assets/cover-6.jpg
   - /assets/cover-7.jpg
@@ -38,9 +37,9 @@ image_list:
 index_images: []
 image_server: null
 audio:
-  - title: "网易云歌单 3778678"
+  - title: 网易云
     list:
-      - "https://music.163.com/#/playlist?id=3778678"
+      - https://music.163.com/#/playlist?id=2682238757
 modules:
   debug: false
   player: true
@@ -111,19 +110,19 @@ fireworks:
           alpha: 0.5
           lineWidth: 6
 font:
-  enable: false
+  enable: true
   loadFromGoogle: false
   global:
     external: false
-    family: null
+    family: LXGW WenKai Medium, -apple-system, PingFang SC, Microsoft YaHei, sans-serif
     size: null
   logo:
     external: false
-    family: null
+    family: Yozai Medium, serif
     size: 3
   title:
     external: false
-    family: null
+    family: LXGW WenKai Medium, serif
     size: 2.2
   headings:
     external: false

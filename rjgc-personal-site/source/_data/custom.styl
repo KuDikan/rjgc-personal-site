@@ -313,31 +313,49 @@
     overflow hidden
     text-overflow ellipsis
 
-// ---------- 首页大标题（#brand） ----------
-// 主题默认把 $font-family-logo 用于 .artboard（站点大标题），
-// 但那个变量只是普通无衬线栈，视觉上比较平。
-// 参考 hellobaka.moe 的做法：大标题用衬线展示体 + 更大字号 + 字重更轻，
-// 主标题加宽字距。这里用系统字体栈实现，**不引外部字体 CDN**
-// （Google Fonts 在部分网络不可达，且本站其余部分也不依赖境外资源）。
+// ---------- 字体 ----------
 //
-// 说明：若要用真正的艺术字体（如 Fredericka the Great），
-// 需在 _config.shokax.yml 里设 font.enable: true 且 logo.family 指定，
-// 但该字体不含中文字形，中文会回退到后备字体，效果割裂，故未采用。
+// 站点大标题用 Yozai Medium，正文（body）用 LXGW WenKai Medium，
+// 均来自 ZeoSeven 的 cn-font-split 分片服务：
+//   https://fontsapi.zeoseven.com/192/medium/result.css  → Yozai Medium
+//   https://fontsapi.zeoseven.com/292/medium/result.css  → LXGW WenKai Medium
+// @font-face 声明见 tools/font-inject.js（注入到页面 <head>）。
+//
+// 分片服务按 unicode-range 切片，单个分片约 5 KB，
+// 浏览器只下载页面实际用到的区间，不会拉整个字体。
+//
+// ---------- 首页大标题（#brand） ----------
+//
+// 提高选择器优先级的原因：主题的 brand.styl 里也有 `#brand .artboard`，
+// 而 custom.styl 是被**追加**到主题样式之前的，同优先级下
+// 主题那条（font-size: 3em / 系统字体栈）会覆盖我们。
+// 用 `#brand .logo .artboard` 多一层 class 稳定压过。
+//
+// font-family 直接写字体名而**不用 $font-family-logo 变量**：
+// 变量展开后会与主题的 font.logo.family 拼接成
+//   "Yozai Medium", "Yozai Medium", serif
+// 这种重复项（主题变量本身已包含我们配的值）。直接写字体名更干净，
+// 字体加载失败时由后面的系统字体栈兜底。
+//
+// 主题变量有个 bug（_variables.styl 第 15 行）：
+//     $font-family-logo = get_font_family('logo'), ... if get_font_family('title')
+// 条件用的是 title 而非 logo，所以**只设 logo.family 不设 title.family
+// 不会生效**。因此两个都要在 _config.shokax.yml 里写（正文 global 同理）。
 
 #brand
-  .artboard
-    font-family "Optima", "Palatino Linotype", Palatino, "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "Times New Roman", serif
+  .logo .artboard
+    font-family "Yozai Medium", "Optima", "Palatino Linotype", "Songti SC", serif
     font-size 3.4em
-    font-weight 300
+    font-weight 500
     letter-spacing .06em
     line-height 1.25
     color var(--theme-color, #49b1ab)
     text-shadow 0 2px 12px rgba(0, 0, 0, .06)
 
-  h1.title
-    font-family "Optima", "Palatino Linotype", Palatino, "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "Times New Roman", serif
+  .logo h1.title
+    font-family "LXGW WenKai Medium", "Optima", "Palatino Linotype", "Songti SC", serif
     font-size 2.5em
-    font-weight 300
+    font-weight 500
     letter-spacing .18em
     line-height 1.3
 

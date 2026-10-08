@@ -1,12 +1,11 @@
 # ==========================================================================
 # 站点基础
-#  个人资料为占位信息，需要替换时改这里 + source/about/index.md
 # ==========================================================================
-title: personal-blog
+title: Personal Blog
 subtitle: Hexo + ShokaX 驱动的个人站点
 description: 一个由 Hexo 与 ShokaX 构建的个人网站，包含博客、论文订阅、个人 Wiki 与状态面板。
 keywords: hexo, shokax, blog, 静态博客, cloudflare
-author: Ku
+author: KuDikan
 language: zh-CN
 timezone: Asia/Shanghai
 

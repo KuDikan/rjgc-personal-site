@@ -21,9 +21,8 @@
     "deploy": "wrangler deploy",
     "verify:theme": "node tools/verify-theme.mjs",
     "data": "node tools/build-data.mjs",
-    "music": "node tools/build-music.mjs",
     "data:validate": "node tools/validate.mjs",
-    "ci:build": "npm run verify:theme && npm run data && npm run music && npm run build:search && npm run data:validate",
+    "ci:build": "npm run verify:theme && npm run data && npm run build:search && npm run data:validate",
     "verify:player": "node tools/verify-player-bundle.mjs"
   },
   "devDependencies": {

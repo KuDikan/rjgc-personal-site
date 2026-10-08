@@ -3,17 +3,14 @@ title: 关于我
 layout: page
 comments: false
 date: 2026-10-07
-updated: 2026-10-07
+updated: 2026-10-08
 ---
 
 ## 基本信息
 
-- **姓名**：Ku
+- **姓名**：KuDikan
 - **身份**：独立开发者
-- **邮箱**：you@example.com
-
-> 本页为占位内容，站点跑通后可在此替换为真实信息。
-> 需要修改的位置是 `_config.yml` 的 `author` 与本页正文。
+- **邮箱**：kudikan@kukuku.icu
 
 ## 我在做什么
 
