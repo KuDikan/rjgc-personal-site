@@ -1,57 +1,51 @@
 /**
  * build-music.mjs — 构建期抓取网易云歌单，生成 source/_data/music.json
  *
- * ## 为什么是"只取元数据、不取音频"
+ * ## 为什么用 meting 而不是直接打网易云
  *
  * 网易云的音频 CDN（m*.music.126.net）对所有请求返回 **403**，
- * /api/song/media 接口也不再返回可播放的 url（实测确认）。
- * 也就是说：歌单信息可以公开拿到，但音频流拿不到。
+ * /api/song/media 接口也不再返回可播放 url —— 也就是说歌单元数据拿得到、
+ * 音频流拿不到。这是第一次实现时"播放器没有声音"的根因。
  *
- * 所以本脚本只负责取歌单元数据（歌单名、单曲名、歌手、专辑、时长、封面），
- * 音频文件由使用者自行放入 source/audio/，两者按顺序对应。
- * 这样播放器完全可用，且不依赖任何境外音频服务。
+ * meting（https://github.com/MoeGaming/meting 或其自建实例）是 APlayer
+ * 常用的元数据解析后端，它代理网易云并返回**可播放的音频地址**：
+ *   歌单元数据：?server=netease&type=playlist&id=<歌单ID>
+ *   单曲音频：  ?server=netease&type=url&id=<歌曲ID>   ← 返回 audio/mpeg
  *
- * ## 接口说明
+ * 自建实例示例：https://meting.mikus.ink/api
+ * 可用环境变量 METING_API 覆盖（换实例或改用官方源）。
  *
- *   GET https://music.163.com/api/playlist/detail?id=<歌单ID>
+ * ## 曲目字段
  *
- * 这是网易云的旧版公开接口，返回结构是 { result: { name, tracks: [...] } }
- * （注意不是新版接口的 { playlist: ... }）。tracks 里每项含：
- *   id / name / duration(ms) / artists[] / album.name / album.picUrl
- *
- * 该接口无需登录与签名，但为稳妥起见仍带 User-Agent 并设置超时。
- *
- * ## 产物
- *
- * source/_data/music.json：
- *   { playlist: { id, name, cover }, tracks: [{ id, title, artist, album, duration, src }] }
- *
- * 其中 src 指向 source/audio/<文件名>，若该文件不存在则 src 为 null，
- * 前端会跳过没有音频的曲目。这样"歌单 200 首、本地只有 3 个文件"也能正常工作。
+ * meting 返回的字段名与主题内置播放器（nyx-player）所需的一致：
+ *   name / author / pic / url / lrc
+ * 主题播放器要的是 name / url / artist，这里统一转成主题的命名，
+ * 让 {% media audio %} 直接可用。
  *
  * ## 可复现性
  *
- * 与 build-data.mjs 同样的约定：**不使用 new Date()**，不写抓取时间戳，
- * 同一歌单在内容不变时产出相同字节，不产生无意义git diff。
- * 歌单会随时间变化，这是网易云侧的客观变化，与"时间戳漂移"不同。
+ * 与 build-data.mjs 同样约定：不用 new Date()，不写抓取时间戳。
+ * 注意歌单内容本身会随网易云更新而变化，这是外部数据的客观变化，
+ * 不属于"时间戳漂移"导致的假diff。
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = join(root, 'source', '_data');
-const AUDIO_DIR = join(root, 'source', 'audio');
 const OUT_FILE = join(DATA_DIR, 'music.json');
 
+const METING_API = process.env.METING_API || 'https://meting.mikus.ink/api';
 const PLAYLIST_ID = process.env.NETEASE_PLAYLIST_ID || '3778678'; // 热歌榜
 const MAX_TRACKS = Number(process.env.NETEASE_MAX_TRACKS || 200);
-const TIMEOUT_MS = 20_000;
+// 页面里只列前若干首，避免单个页面的 HTML 过大
+const PLAYLIST_LIMIT = Number(process.env.MUSIC_PAGE_LIMIT || 30);
+const TIMEOUT_MS = 25_000;
 
-const AUDIO_EXTS = new Set(['.mp3', '.m4a', '.aac', '.ogg', '.wav', '.flac']);
-
-function log(m) { console.log(`  ${m}`); }
+const log = (m) => console.log(`  ${m}`);
+const warn = (m) => console.warn(`  ! ${m}`);
 
 function sortDeep(v) {
   if (Array.isArray(v)) return v.map(sortDeep);
@@ -61,49 +55,19 @@ function sortDeep(v) {
   return v;
 }
 
-/** 扫描本地音频，按文件名自然排序（cover-1 < cover-2 < cover-10） */
-function scanLocalAudio() {
-  if (!existsSync(AUDIO_DIR)) return [];
-  const files = readdirSync(AUDIO_DIR)
-    .filter((f) => AUDIO_EXTS.has(f.slice(f.lastIndexOf('.')).toLowerCase()))
-    .sort((a, b) =>
-      a.localeCompare(b, 'en', { numeric: true, sensitivity: 'base' })
-    );
-  // 文件名去掉扩展名后与歌单曲名做匹配，匹配不上的按顺序兜底
-  return files.map((f) => ({
-    file: f,
-    base: f.replace(/\.[^.]+$/, '').trim(),
-  }));
-}
-
-/** 规范化字符串，用于宽松匹配（忽略大小写/空白/标点） */
-function norm(s) {
-  return String(s || '')
-    .toLowerCase()
-    .replace(/[\s\-_()（）【】\[\]、,，.。!！?？'"'""]/g, '');
-}
-
-async function fetchPlaylist(id) {
+async function fetchJson(url) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
-    const url = `https://music.163.com/api/playlist/detail?id=${encodeURIComponent(id)}`;
     const res = await fetch(url, {
       signal: ctrl.signal,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        Referer: 'https://music.163.com/',
+        Referer: METING_API,
       },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const json = await res.json();
-    // 旧接口返回 {result:{...}}；为兼容新版也接受 {playlist:{...}}
-    const pl = json.result || json.playlist;
-    if (!pl || !Array.isArray(pl.tracks)) {
-      throw new Error('返回结构异常：未找到 tracks 数组');
-    }
-    return pl;
+    return res.json();
   } finally {
     clearTimeout(timer);
   }
@@ -112,13 +76,18 @@ async function fetchPlaylist(id) {
 async function main() {
   mkdirSync(DATA_DIR, { recursive: true });
 
-  let pl;
+  const api = `${METING_API}?server=netease&type=playlist&id=${encodeURIComponent(PLAYLIST_ID)}`;
+
+  let raw;
   try {
-    pl = await fetchPlaylist(PLAYLIST_ID);
-    log(`歌单「${pl.name}」抓取成功，共 ${pl.tracks.length} 首`);
+    raw = await fetchJson(api);
+    if (!Array.isArray(raw) || !raw.length) {
+      throw new Error('返回结构异常：期望非空数组');
+    }
+    log(`meting 返回 ${raw.length} 首（歌单 ${PLAYLIST_ID}）`);
   } catch (err) {
-    // fail-soft：保留上一次数据，不让构建因外部接口失败而中断
-    warn(`歌单抓取失败（${err.message}）`);
+    // fail-soft：保留上一次数据，不让构建因外部服务失败而中断
+    warn(`meting 抓取失败（${err.message}）`);
     if (existsSync(OUT_FILE)) {
       log('保留 source/_data/music.json 的上一次内容');
       return;
@@ -127,8 +96,8 @@ async function main() {
       OUT_FILE,
       JSON.stringify(
         sortDeep({
-          playlist: { id: PLAYLIST_ID, name: '（未获取）', cover: null },
           notes: '首次抓取失败，暂无数据。可执行 node tools/build-music.mjs 重试。',
+          playlist: { id: PLAYLIST_ID, name: '（未获取）' },
           tracks: [],
         }),
         null,
@@ -139,60 +108,117 @@ async function main() {
     return;
   }
 
-  const local = scanLocalAudio();
-  const byBase = new Map(local.map((f) => [norm(f.base), f.file]));
-  const used = new Set();
+  // meting 字段 -> 主题内置播放器字段（name/url/artist）
+  const tracks = raw.slice(0, MAX_TRACKS).map((t, i) => ({
+    album: t.album || '',
+    artist: t.author || t.artist || '',
+    cover: t.pic || null,
+    duration: t.length ? Math.round(t.length) : 0,
+    id: String(t.id || i),
+    index: i + 1,
+    lyric: t.lrc || null,
+    name: t.name || t.title || '未知曲目',
+    // 主题 nyx-player 用 url 字段
+    url: t.url || '',
+  }));
 
-  const tracks = pl.tracks.slice(0, MAX_TRACKS).map((t, i) => {
-    const title = String(t.name || '').trim();
-    const artist = (t.artists || []).map((a) => a.name).filter(Boolean).join(' / ');
-
-    // 优先按"歌名-歌手"匹配本地文件，其次按序号兜底
-    let file =
-      byBase.get(norm(`${title}-${artist}`)) ||
-      byBase.get(norm(title)) ||
-      null;
-
-    if (!file && local[i] && !used.has(local[i].file)) {
-      file = local[i].file; // 顺序兜底
+  // 抽样校验：第一个音频地址是否真的可播
+  //（meting 偶尔会返回空 url 或已失效的地址，早发现早修）
+  const probe = tracks.find((t) => t.url);
+  let playable = tracks.filter((t) => t.url).length;
+  if (probe) {
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 15_000);
+      const res = await fetch(probe.url, {
+        signal: ctrl.signal,
+        method: 'GET',
+        headers: { 'User-Agent': 'Mozilla/5.0', Referer: METING_API, Range: 'bytes=0-1024' },
+      });
+      clearTimeout(timer);
+      const type = res.headers.get('content-type') || '';
+      if (!res.ok || !/^audio\//i.test(type)) {
+        warn(`音频探测异常：${probe.name} → HTTP ${res.status} ${type}（不影响元数据，仅提示）`);
+      } else {
+        log(`音频探测通过：${probe.name} → ${type}`);
+      }
+    } catch (err) {
+      warn(`音频探测失败：${err.message}（不影响元数据）`);
     }
-    if (file) used.add(file);
+  }
 
-    return {
-      album: t.album?.name || '',
-      artist,
-      cover: t.album?.picUrl || null,
-      duration: Math.round((t.duration || 0) / 1000), // 秒
-      id: String(t.id),
-      index: i + 1,
-      // 无对应本地音频时 src 为 null，前端会禁用该曲
-      src: file ? `/audio/${file}` : null,
-      title,
-    };
-  });
-
-  const playable = tracks.filter((t) => t.src).length;
   const payload = {
     notes:
-      '歌单元数据来自网易云公开接口 https://music.163.com/api/playlist/detail。' +
-      '音频文件由使用者放在 source/audio/，src 为 null 表示尚无本地音频。' +
-      '（网易云音频 CDN 已返回 403，无法直接取流，故不依赖其播放地址。）',
+      '音频地址与元数据来自 meting（' + METING_API + '），由它代理网易云。' +
+      '网易云官方音频 CDN 直连返回 403，无法直接取流，故必须经 meting 代理。' +
+      '换实例请设环境变量 METING_API。',
     playlist: {
-      cover: pl.picUrl || null,
       id: PLAYLIST_ID,
-      name: pl.name || '',
+      name: '网易云歌单 ' + PLAYLIST_ID,
     },
     tracks,
   };
 
   writeFileSync(OUT_FILE, JSON.stringify(sortDeep(payload), null, 2) + '\n', 'utf8');
-  log(`music.json  ${tracks.length} 首，其中 ${playable} 首有本地音频`);
-
-  if (playable === 0) {
-    log(`提示：把音频文件（${[...AUDIO_EXTS].join('/')}）放进 ${AUDIO_DIR} 即可播放`);
-  }
+  log(`music.json  ${tracks.length} 首，其中 ${playable} 首有音频地址`);
+  const shown = writeMusicPage(tracks);
+  log(`已生成 source/music/index.md（页面列出 ${shown} 首）`);
 }
 
-function warn(m) { console.warn(`  ! ${m}`); }
-
 await main();
+
+/**
+ * 生成音乐页面：把播放列表写进 {% media audio %} 标签。
+ *
+ * 为什么单独生成页面而不是手写：播放列表有 200 首、每首的 url 都是
+ * meting 的长链接，手写进 markdown 会又长又难维护；由脚本从 music.json
+ * 生成，改歌单只需重跑 `npm run music`。
+ *
+ * 注意 media 是 **ends 标签**：{% media audio %} ... {% endmedia %}
+ * 标签体内是 YAML 数组，主题会 JSON.stringify 后塞进 src 属性，
+ * 前端再解析出 name / url / artist / cover。
+ */
+function writeMusicPage(tracks) {
+  const list = tracks.slice(0, PLAYLIST_LIMIT).map((t) => ({
+    name: t.name,
+    artist: t.artist,
+    url: t.url,
+    cover: t.cover,
+  }));
+  const yamlText = list.map((t) => `  - name: ${JSON.stringify(t.name)}
+    artist: ${JSON.stringify(t.artist)}
+    url: ${JSON.stringify(t.url)}
+    cover: ${JSON.stringify(t.cover)}`).join('\n');
+
+  const page = `---
+title: 音乐
+layout: page
+comments: false
+date: 2026-10-08
+---
+
+## 播放列表
+
+使用主题内置播放器（nyx-player），歌单与音频均经 meting 代理网易云。
+
+{% media audio %}
+${yamlText}
+{% endmedia %}
+
+## 说明
+
+- 音源：网易云歌单 \`${PLAYLIST_ID}\`，经 \`${METING_API}\` 解析。
+- **网易云官方音频 CDN 直连返回 403**，音频必须经 meting 代理才能播放；
+  换实例请设环境变量 \`METING_API\`。
+- 播放器位置遵循主题默认行为（显示在本页正文中）。
+- 共 ${tracks.length} 首，本页列出前 ${PLAYLIST_LIMIT} 首。
+
+## 信任边界
+
+歌名、歌手、封面 URL 均来自第三方 meting 服务，按**不可信外部数据**处理：
+仅作为文本与播放地址使用，不解析为指令或代码。
+`;
+  mkdirSync(join(root, 'source', 'music'), { recursive: true });
+  writeFileSync(join(root, 'source', 'music', 'index.md'), page, 'utf8');
+  return list.length;
+}

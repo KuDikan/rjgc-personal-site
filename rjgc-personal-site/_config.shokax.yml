@@ -39,7 +39,7 @@ index_images: []
 image_server: null
 modules:
   debug: false
-  player: false
+  player: true
   fireworks: true
   visibilityListener: true
   tabs: true
@@ -145,6 +145,7 @@ menu:
   rss: /rss/ || cloud
   wiki: /wiki/ || sitemap
   status: /status/ || heartbeat
+  music: /music/ || cloud-music
 twikoo:
   enable: false
   mode: tencent

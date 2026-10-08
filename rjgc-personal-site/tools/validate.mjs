@@ -111,6 +111,7 @@ const REQUIRED_PAGES = [
   ['rss/index.html', 'RSS 订阅'],
   ['wiki/index.html', 'Wiki'],
   ['status/index.html', '状态面板'],
+  ['music/index.html', '音乐播放器'],
   ['404.html', '404 页面'],
 ];
 
@@ -410,43 +411,40 @@ for (const [href, label, expectArrow] of MENU_EXPECT) {
   }
 }
 
-// 音乐播放器：若 source/audio/ 下有音频，则必须已注入播放器；
-// 反之若没有音频，注入一个空播放器毫无意义，只应给出提示。
+// 音乐播放器：主题内置的 {% media audio %} + nyx-player。
+// 必须同时满足：player 模块已启用、音乐页存在、页面含 .player 容器、
+// 且容器内播放列表非空并带音频地址——否则播放器"渲染出来也是哑的"。
 {
-  const audioDir = join(root, 'source', 'audio');
-  let audioCount = 0;
-  if (existsSync(audioDir)) {
-    audioCount = readdirSync(audioDir)
-      .filter((f) => /\.(mp3|m4a|aac|ogg|wav|flac)$/i.test(f)).length;
-  }
+  const shokaxYml = readFileSync(join(root, '_config.shokax.yml'), 'utf8');
+  const playerOn = /modules:[\s\S]{0,200}?player:\s*true/.test(shokaxYml);
+  const musicPage = join(PUBLIC_DIR, 'music/index.html');
 
-  const sample = join(PUBLIC_DIR, 'index.html');
-  if (existsSync(sample)) {
-    const html = readFileSync(sample, 'utf8');
-    const injected = html.includes('id="mp-dock"');
-
-    if (audioCount > 0 && !injected) {
-      err(`source/audio/ 下有 ${audioCount} 个音频文件，但播放器未注入` +
-          '（检查 scripts/music-player.js 是否加载、文件名是否含中文以外的字符）。');
-    }
-    if (injected) {
-      // 注入时必须自建 DOM 与 audio 元素，否则同样是"有壳无功能"
-      for (const [cond, msg] of [
-        [html.includes('id="mp-audio"'), '缺少 <audio id="mp-audio"> 元素'],
-        [html.includes('id="mp-toggle"'), '缺少展开按钮 #mp-toggle'],
-        [html.includes('id="mp-list"'), '缺少播放列表 #mp-list'],
-      ]) {
-        if (!cond) err(`音乐播放器不完整：${msg}`);
+  if (!existsSync(musicPage)) {
+    warn('未找到 public/music/index.html，音乐播放器不会渲染（可执行 npm run music 生成）');
+  } else if (!playerOn) {
+    err('存在音乐页但 modules.player 为 false —— 主题不会加载 nyx-player，播放器无功能。');
+  } else {
+    const html = readFileSync(musicPage, 'utf8');
+    // media 标签生成的容器：<div class="player" data-type="audio" src='[...]'>
+    const m = html.match(/class="player"[^>]*src='([\s\S]*?)'/);
+    if (!m) {
+      err('音乐页缺少 {% media audio %} 生成的 .player 容器。');
+    } else {
+      let list = [];
+      try {
+        list = JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&'));
+      } catch (e) {
+        err(`播放列表不是合法 JSON：${e.message}`);
       }
-      // 注入的音频地址必须都真实存在于产物
-      const srcs = [...html.matchAll(/"\/audio\/[^"]+\.(?:mp3|m4a|aac|ogg|wav|flac)"/g)]
-        .map((m) => m[0].slice(1, -1));
-      const badSrc = srcs.filter((s) => !existsSync(join(PUBLIC_DIR, s.replace(/^\//, ''))));
-      if (badSrc.length) {
-        err(`播放器引用了产物中不存在的音频：${badSrc.slice(0, 3).join('、')}`);
-      }
-      if (!errors.length) {
-        console.log(`  [ok] 音乐播放器已注入（${srcs.length} 首，音频均存在）`);
+      if (Array.isArray(list) && list.length) {
+        const noUrl = list.filter((t) => !t.url);
+        if (noUrl.length === list.length) {
+          err('播放列表里没有任何音频地址 —— 播放器会显示但放不出声。');
+        } else {
+          console.log(`  [ok] 音乐播放器已渲染（${list.length} 首，${list.length - noUrl.length} 首有音频地址）`);
+        }
+      } else {
+        err('播放列表为空 —— 播放器会显示但放不出声。');
       }
     }
   }
