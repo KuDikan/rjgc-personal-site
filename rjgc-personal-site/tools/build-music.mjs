@@ -179,12 +179,26 @@ await main();
  * 前端再解析出 name / url / artist / cover。
  */
 function writeMusicPage(tracks) {
-  const list = tracks.slice(0, PLAYLIST_LIMIT).map((t) => ({
-    name: t.name,
-    artist: t.artist,
-    url: t.url,
-    cover: t.cover,
-  }));
+  const list = tracks.slice(0, PLAYLIST_LIMIT);
+
+  /**
+   * 播放列表必须写进 **front-matter 的 audio 字段**，而不是页面正文。
+   *
+   * 依据主题源码：
+   *   - layout/_partials/layout.pug：`if page.audio → CONFIG.audio = JSON.stringify(page.audio)`
+   *   - js/_app/player.ts 的 initAudioPlayer()：遍历 `CONFIG.audio`，
+   *     取 `item.title` 与 `item.list[0]` 组装 { name, url } 传给 nyx-player
+   *   - js/_app/pjax/domInit.ts：`if (__shokax_player__) await initAudioPlayer()`
+   *
+   * 也就是说：正文里的 `{% media %}` 标签与此**完全无关**——
+   * 它只是把数据塞进一个无人读取的 <div class="player">。
+   * 之前只写了 media 标签，CONFIG.audio 是 undefined，
+   * 于是 initPlayer 收到空列表，工具栏按钮出现但点了没反应。
+   */
+  const audioYaml = list
+    .map((t) => `  - title: ${JSON.stringify(t.name)}\n    list:\n      - ${JSON.stringify(t.url)}`)
+    .join('\n');
+
   const yamlText = list.map((t) => `  - name: ${JSON.stringify(t.name)}
     artist: ${JSON.stringify(t.artist)}
     url: ${JSON.stringify(t.url)}
@@ -195,11 +209,15 @@ title: 音乐
 layout: page
 comments: false
 date: 2026-10-08
+audio:
+${audioYaml}
 ---
 
 ## 播放列表
 
-使用主题内置播放器（nyx-player），歌单与音频均经 meting 代理网易云。
+使用主题内置播放器（nyx-player）。工具栏的播放/列表按钮即由本页
+front-matter 的 \`audio\` 字段驱动——播放器读的是 \`CONFIG.audio\`，
+与正文里的 media 标签无关（那个标签只是把数据放进一个无人读取的 div）。
 
 {% media audio %}
 ${yamlText}
@@ -210,8 +228,8 @@ ${yamlText}
 - 音源：网易云歌单 \`${PLAYLIST_ID}\`，经 \`${METING_API}\` 解析。
 - **网易云官方音频 CDN 直连返回 403**，音频必须经 meting 代理才能播放；
   换实例请设环境变量 \`METING_API\`。
-- 播放器位置遵循主题默认行为（显示在本页正文中）。
-- 共 ${tracks.length} 首，本页列出前 ${PLAYLIST_LIMIT} 首。
+- 播放器位置遵循主题默认行为：工具栏右侧的播放按钮 + 列表按钮。
+- 共 ${tracks.length} 首，本页收录前 ${list.length} 首。
 
 ## 信任边界
 

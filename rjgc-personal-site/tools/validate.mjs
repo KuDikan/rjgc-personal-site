@@ -425,26 +425,58 @@ for (const [href, label, expectArrow] of MENU_EXPECT) {
     err('存在音乐页但 modules.player 为 false —— 主题不会加载 nyx-player，播放器无功能。');
   } else {
     const html = readFileSync(musicPage, 'utf8');
-    // media 标签生成的容器：<div class="player" data-type="audio" src='[...]'>
-    const m = html.match(/class="player"[^>]*src='([\s\S]*?)'/);
-    if (!m) {
-      err('音乐页缺少 {% media audio %} 生成的 .player 容器。');
+
+    // 关键：播放器读的是 CONFIG.audio（来自 page.audio front-matter），
+    // 不是正文里的 {% media %} 标签。只检查 media 标签会漏掉
+    // "按钮出现但点了没反应"这种故障——因为 CONFIG.audio 是 undefined。
+    // CONFIG.audio 是完整 JSON 数组，内含的音频地址里带 `]`（如 ?id=287398），
+    // 因此不能用 [\s\S]*?\] 之类"匹配到第一个右括号"的写法。
+    // 改为：从 '[' 起做括号计数，找到真正配对的 ']'。
+    const audioStart = html.indexOf('audio:');
+    let audioJson = null;
+    if (audioStart >= 0 && !/audio:\s*undefined/.test(html.slice(audioStart, audioStart + 20))) {
+      const from = html.indexOf('[', audioStart);
+      if (from >= 0) {
+        let depth = 0;
+        let inStr = false;
+        for (let i = from; i < html.length; i++) {
+          const ch = html[i];
+          if (inStr) {
+            if (ch === '\\') { i++; continue; }
+            if (ch === '"') inStr = false;
+            continue;
+          }
+          if (ch === '"') { inStr = true; continue; }
+          if (ch === '[') depth++;
+          else if (ch === ']') { depth--; if (depth === 0) { audioJson = html.slice(from, i + 1); break; } }
+        }
+      }
+    }
+
+    if (!audioJson) {
+      err('音乐页 front-matter 缺少 audio 字段（产物中 CONFIG.audio 为 undefined）—— ' +
+          '主题播放器读不到播放列表，工具栏按钮会可点但无反应。' +
+          '可执行 npm run music 重新生成音乐页。');
     } else {
       let list = [];
       try {
-        list = JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&'));
+        list = JSON.parse(audioJson);
       } catch (e) {
-        err(`播放列表不是合法 JSON：${e.message}`);
+        err(`CONFIG.audio 不是合法 JSON：${e.message}`);
       }
       if (Array.isArray(list) && list.length) {
-        const noUrl = list.filter((t) => !t.url);
-        if (noUrl.length === list.length) {
-          err('播放列表里没有任何音频地址 —— 播放器会显示但放不出声。');
-        } else {
-          console.log(`  [ok] 音乐播放器已渲染（${list.length} 首，${list.length - noUrl.length} 首有音频地址）`);
+        // initAudioPlayer 取 item.list[0]，缺 list 或空list 都会导致无声音
+        const bad = list.filter((t) => !Array.isArray(t.list) || !t.list[0]);
+        if (bad.length === list.length) {
+          err('CONFIG.audio 中没有任何条目带 list[0] 音频地址 —— 播放器有列表但放不出声。');
+        } else if (bad.length) {
+          warn(`CONFIG.audio 有 ${bad.length} 条缺少 list[0]，这些曲目无法播放`);
         }
+        // 工具栏按钮由 domInit 在 __shokax_player__ 为 true 时注入，
+        // 按钮本身是 JS 创建的，产物 HTML 里不会有，故只校验数据侧。
+        console.log(`  [ok] 音乐播放器已就绪（CONFIG.audio ${list.length} 首，${list.length - bad.length} 首可播放）`);
       } else {
-        err('播放列表为空 —— 播放器会显示但放不出声。');
+        err('CONFIG.audio 为空数组 —— 播放器无内容。');
       }
     }
   }
