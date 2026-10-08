@@ -161,82 +161,83 @@ async function main() {
 
   writeFileSync(OUT_FILE, JSON.stringify(sortDeep(payload), null, 2) + '\n', 'utf8');
   log(`music.json  ${tracks.length} 首，其中 ${playable} 首有音频地址`);
-  const shown = writeMusicPage(tracks);
-  log(`已生成 source/music/index.md（页面列出 ${shown} 首）`);
+
+  syncThemeAudio(tracks);
+}
+
+/**
+ * 把播放列表写进 **站点主题配置** `_config.shokax.yml` 的 `audio` 字段。
+ *
+ * ## 为什么是 theme.audio 而不是页面 front-matter
+ *
+ * 播放器最终读的是 `CONFIG.audio`，而 `CONFIG = shokax_CONFIG`，
+ * 由 theme/scripts/generaters/script.js 生成的 siteInit 内联数据提供：
+ *
+ *     const siteConfig = { audio: void 0, ... }
+ *     if (theme?.audio) siteConfig.audio = theme.audio
+ *     define: { shokax_CONFIG: JSON.stringify(siteConfig) }
+ *
+ * 也就是说 `audio` 取自 **`_config.shokax.yml` 的顶层 audio**（站点级），
+ * 对所有页面生效；页面 front-matter 的 `page.audio` 只会进
+ * `LOCAL.audio`（另一个变量），**播放器根本不读它**。
+ *
+ * 这点踩过两次坑：
+ *   1. 第一次只写正文 {% media %} 标签→ CONFIG.audio undefined；
+ *   2. 改成写 front-matter 的 audio → 仍然 undefined，
+ *      报TypeError: Cannot read properties of undefined (reading 'forEach')。
+ * 页面级根本不是正确位置，只有 theme.audio 是。
+ *
+ * 格式（theme/_config.yml 的默认注释即此形状）：
+ *     audio:
+ *       - title: 列表名
+ *         list:
+ *           - https://.../audio.mp3
+ * initAudioPlayer 取 item.list[0] 作为音频地址，故每组放一首即可。
+ */
+function syncThemeAudio(tracks) {
+  const themeYml = join(root, '_config.shokax.yml');
+  if (!existsSync(themeYml)) {
+    warn(`未找到 ${themeYml}，跳过 theme.audio 写入`);
+    return;
+  }
+
+  const list = tracks.slice(0, PLAYLIST_LIMIT).map((t) => ({
+    title: t.name,
+    list: [t.url],
+  }));
+
+  let text = readFileSync(themeYml, 'utf8');
+
+  // 整块替换已有的顶层 audio:（可能不存在），保持其余内容原样。
+  // 不用 js-yaml dump 整个文件——那会重排键顺序并丢掉所有注释。
+  const block =
+    'audio:\n' + list.map((t) => `  - title: ${JSON.stringify(t.title)}\n    list:\n      - ${JSON.stringify(t.list[0])}`).join('\n');
+
+  /**
+   * 替换整个 audio 块，而不是只替换 `audio:` 那一行。
+   *
+   * 踩过的坑：先前只 replace(/^audio:\s*$/m, block)，
+   * 结果旧的 30 条列表仍留在文件里、新的 30 条又追加在后面 → 变成 60 条，
+   * 每次 npm run music 还会继续翻倍。必须连同后续所有
+   * 以 `  - ` 开头的列表项一起删掉。
+   */
+  const lines = text.split('\n');
+  const start = lines.findIndex((l) => /^audio:\s*$/.test(l));
+  if (start >= 0) {
+    let end = start + 1;
+    // 列表项形如 `  - title: ...` / `    list:` / `      - <url>`
+    while (end < lines.length && /^(\s+-\s|\s{4}\S)/.test(lines[end])) end++;
+    lines.splice(start, end - start, ...block.split('\n'));
+  } else {
+    // 没有 audio 段：插到 modules: 之前
+    const at = lines.findIndex((l) => /^modules:/.test(l));
+    lines.splice(at < 0 ? 0 : at, 0, ...block.split('\n'), '');
+  }
+  text = lines.join('\n');
+
+  writeFileSync(themeYml, text, 'utf8');
+  log(`已写入 _config.shokax.yml 的 theme.audio（${list.length} 首，站点级生效）`);
 }
 
 await main();
 
-/**
- * 生成音乐页面：把播放列表写进 {% media audio %} 标签。
- *
- * 为什么单独生成页面而不是手写：播放列表有 200 首、每首的 url 都是
- * meting 的长链接，手写进 markdown 会又长又难维护；由脚本从 music.json
- * 生成，改歌单只需重跑 `npm run music`。
- *
- * 注意 media 是 **ends 标签**：{% media audio %} ... {% endmedia %}
- * 标签体内是 YAML 数组，主题会 JSON.stringify 后塞进 src 属性，
- * 前端再解析出 name / url / artist / cover。
- */
-function writeMusicPage(tracks) {
-  const list = tracks.slice(0, PLAYLIST_LIMIT);
-
-  /**
-   * 播放列表必须写进 **front-matter 的 audio 字段**，而不是页面正文。
-   *
-   * 依据主题源码：
-   *   - layout/_partials/layout.pug：`if page.audio → CONFIG.audio = JSON.stringify(page.audio)`
-   *   - js/_app/player.ts 的 initAudioPlayer()：遍历 `CONFIG.audio`，
-   *     取 `item.title` 与 `item.list[0]` 组装 { name, url } 传给 nyx-player
-   *   - js/_app/pjax/domInit.ts：`if (__shokax_player__) await initAudioPlayer()`
-   *
-   * 也就是说：正文里的 `{% media %}` 标签与此**完全无关**——
-   * 它只是把数据塞进一个无人读取的 <div class="player">。
-   * 之前只写了 media 标签，CONFIG.audio 是 undefined，
-   * 于是 initPlayer 收到空列表，工具栏按钮出现但点了没反应。
-   */
-  const audioYaml = list
-    .map((t) => `  - title: ${JSON.stringify(t.name)}\n    list:\n      - ${JSON.stringify(t.url)}`)
-    .join('\n');
-
-  const yamlText = list.map((t) => `  - name: ${JSON.stringify(t.name)}
-    artist: ${JSON.stringify(t.artist)}
-    url: ${JSON.stringify(t.url)}
-    cover: ${JSON.stringify(t.cover)}`).join('\n');
-
-  const page = `---
-title: 音乐
-layout: page
-comments: false
-date: 2026-10-08
-audio:
-${audioYaml}
----
-
-## 播放列表
-
-使用主题内置播放器（nyx-player）。工具栏的播放/列表按钮即由本页
-front-matter 的 \`audio\` 字段驱动——播放器读的是 \`CONFIG.audio\`，
-与正文里的 media 标签无关（那个标签只是把数据放进一个无人读取的 div）。
-
-{% media audio %}
-${yamlText}
-{% endmedia %}
-
-## 说明
-
-- 音源：网易云歌单 \`${PLAYLIST_ID}\`，经 \`${METING_API}\` 解析。
-- **网易云官方音频 CDN 直连返回 403**，音频必须经 meting 代理才能播放；
-  换实例请设环境变量 \`METING_API\`。
-- 播放器位置遵循主题默认行为：工具栏右侧的播放按钮 + 列表按钮。
-- 共 ${tracks.length} 首，本页收录前 ${list.length} 首。
-
-## 信任边界
-
-歌名、歌手、封面 URL 均来自第三方 meting 服务，按**不可信外部数据**处理：
-仅作为文本与播放地址使用，不解析为指令或代码。
-`;
-  mkdirSync(join(root, 'source', 'music'), { recursive: true });
-  writeFileSync(join(root, 'source', 'music', 'index.md'), page, 'utf8');
-  return list.length;
-}

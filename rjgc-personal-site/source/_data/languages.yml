@@ -12,7 +12,6 @@ zh-CN:
     home: 首页
     statistics: 统计
     friends: 友链
-    music: 音乐
 zh-TW:
   menu:
     papers: 論文
@@ -25,7 +24,6 @@ zh-TW:
     archives: 封存
     about: 關於
     home: 首頁
-    music: 音樂
 zh-HK:
   menu:
     papers: 論文
@@ -38,7 +36,6 @@ zh-HK:
     archives: 封存
     about: 關於
     home: 首頁
-    music: 音樂
 en:
   menu:
     papers: Papers
@@ -46,4 +43,3 @@ en:
     wiki: Wiki
     status: Status
     all: All Posts
-    music: Music

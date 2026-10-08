@@ -111,7 +111,6 @@ const REQUIRED_PAGES = [
   ['rss/index.html', 'RSS 订阅'],
   ['wiki/index.html', 'Wiki'],
   ['status/index.html', '状态面板'],
-  ['music/index.html', '音乐播放器'],
   ['404.html', '404 页面'],
 ];
 
@@ -411,76 +410,95 @@ for (const [href, label, expectArrow] of MENU_EXPECT) {
   }
 }
 
-// 音乐播放器：主题内置的 {% media audio %} + nyx-player。
-// 必须同时满足：player 模块已启用、音乐页存在、页面含 .player 容器、
-// 且容器内播放列表非空并带音频地址——否则播放器"渲染出来也是哑的"。
+// 音乐播放器：主题内置 nyx-player。
+// 数据源是 _config.shokax.yml 的**顶层 audio**（站点级，对所有页面生效），
+// 由 theme/scripts/generaters/script.js 打进 siteConfig → shokax_CONFIG → CONFIG.audio。
+// 这点踩过两次坑：正文 {% media %} 标签与页面 front-matter 的 audio 字段
+// 播放器**都不读**，只认 theme.audio。
+// 校验要点：theme.audio 存在 → 已打进产物 JS → 至少一条带 list[0]。
 {
   const shokaxYml = readFileSync(join(root, '_config.shokax.yml'), 'utf8');
-  const playerOn = /modules:[\s\S]{0,200}?player:\s*true/.test(shokaxYml);
-  const musicPage = join(PUBLIC_DIR, 'music/index.html');
+  const playerOn = /modules:[\s\S]{0,200}?player:////s*true/.test(shokaxYml);
+  const hasThemeAudio = /^audio:////s*$/m.test(shokaxYml);
 
-  if (!existsSync(musicPage)) {
-    warn('未找到 public/music/index.html，音乐播放器不会渲染（可执行 npm run music 生成）');
-  } else if (!playerOn) {
-    err('存在音乐页但 modules.player 为 false —— 主题不会加载 nyx-player，播放器无功能。');
+  if (!playerOn) {
+    err('modules.player 未开启 —— 主题不会加载 nyx-player，播放器无功能。');
+  } else if (!hasThemeAudio) {
+    err('_config.shokax.yml 缺少顶层 audio 配置 —— CONFIG.audio 为 undefined，' +
+        '播放器会报 TypeError: Cannot read properties of undefined。可执行 npm run music 生成。');
   } else {
-    const html = readFileSync(musicPage, 'utf8');
-
-    // 关键：播放器读的是 CONFIG.audio（来自 page.audio front-matter），
-    // 不是正文里的 {% media %} 标签。只检查 media 标签会漏掉
-    // "按钮出现但点了没反应"这种故障——因为 CONFIG.audio 是 undefined。
-    // CONFIG.audio 是完整 JSON 数组，内含的音频地址里带 `]`（如 ?id=287398），
-    // 因此不能用 [\s\S]*?\] 之类"匹配到第一个右括号"的写法。
-    // 改为：从 '[' 起做括号计数，找到真正配对的 ']'。
-    const audioStart = html.indexOf('audio:');
-    let audioJson = null;
-    if (audioStart >= 0 && !/audio:\s*undefined/.test(html.slice(audioStart, audioStart + 20))) {
-      const from = html.indexOf('[', audioStart);
-      if (from >= 0) {
-        let depth = 0;
-        let inStr = false;
-        for (let i = from; i < html.length; i++) {
-          const ch = html[i];
+    // 必须确认它真的进了产物 JS，否则数据只停留在配置文件里。
+    const jsDir = join(PUBLIC_DIR, 'js');
+    let found = 0;
+    let sample = '';
+    if (existsSync(jsDir)) {
+      for (const f of readdirSync(jsDir)) {
+        if (!f.endsWith('.js')) continue;
+        const s = readFileSync(join(jsDir, f), 'utf8');
+        const i = s.indexOf('audio:');
+        if (i < 0) continue;
+        const seg = s.slice(i, i + 80);
+        if (seg.includes('undefined')) continue;
+        // 括号计数取完整数组（地址里含 ]，不能用惰性匹配）
+        const from = s.indexOf('[', i);
+        if (from < 0) continue;
+        let depth = 0, inStr = false, json = null;
+        for (let k = from; k < s.length; k++) {
+          const c = s[k];
           if (inStr) {
-            if (ch === '\\') { i++; continue; }
-            if (ch === '"') inStr = false;
+            if (c === '\\') { k++; continue; }
+            if (c === '"') inStr = false;
             continue;
           }
-          if (ch === '"') { inStr = true; continue; }
-          if (ch === '[') depth++;
-          else if (ch === ']') { depth--; if (depth === 0) { audioJson = html.slice(from, i + 1); break; } }
+          if (c === '"') { inStr = true; continue; }
+          if (c === '[') depth++;
+          else if (c === ']') { depth--; if (depth === 0) { json = s.slice(from, k + 1); break; } }
         }
+        if (!json) continue;
+        try {
+          // 产物里是 JS 对象字面量（键无引号），不是合法 JSON，必须用 Function 求值
+          const list = new Function('return ' + json)();
+          if (Array.isArray(list) && list.length) { found = list.length; sample = String(list[0]?.title ?? ''); }
+        } catch { /* 不是配置数组，跳过 */ }
+        if (found) break;
       }
     }
 
-    if (!audioJson) {
-      err('音乐页 front-matter 缺少 audio 字段（产物中 CONFIG.audio 为 undefined）—— ' +
-          '主题播放器读不到播放列表，工具栏按钮会可点但无反应。' +
-          '可执行 npm run music 重新生成音乐页。');
+    if (!found) {
+      err('theme.audio 已在配置里，但未出现在产物 JS 中—— CONFIG.audio 运行时仍是 undefined，' +
+          '播放器会抛 TypeError。请检查 _config.shokax.yml 的 audio 缩进是否正确。');
     } else {
-      let list = [];
-      try {
-        list = JSON.parse(audioJson);
-      } catch (e) {
-        err(`CONFIG.audio 不是合法 JSON：${e.message}`);
-      }
-      if (Array.isArray(list) && list.length) {
-        // initAudioPlayer 取 item.list[0]，缺 list 或空list 都会导致无声音
-        const bad = list.filter((t) => !Array.isArray(t.list) || !t.list[0]);
-        if (bad.length === list.length) {
-          err('CONFIG.audio 中没有任何条目带 list[0] 音频地址 —— 播放器有列表但放不出声。');
-        } else if (bad.length) {
-          warn(`CONFIG.audio 有 ${bad.length} 条缺少 list[0]，这些曲目无法播放`);
+      // initAudioPlayer 取 item.list[0]，缺失则放不出声
+      const jsFiles = readdirSync(jsDir).filter((f) => f.endsWith('.js'));
+      let bad = 0;
+      for (const f of jsFiles) {
+        const s = readFileSync(join(jsDir, f), 'utf8');
+        const i = s.indexOf('audio:');
+        if (i < 0) continue;
+        const from = s.indexOf('[', i);
+        if (from < 0) continue;
+        let depth = 0, json = null;
+        for (let k = from; k < s.length; k++) {
+          const c = s[k];
+          if (c === '[') depth++;
+          else if (c === ']') { depth--; if (depth === 0) { json = s.slice(from, k + 1); break; } }
         }
-        // 工具栏按钮由 domInit 在 __shokax_player__ 为 true 时注入，
-        // 按钮本身是 JS 创建的，产物 HTML 里不会有，故只校验数据侧。
-        console.log(`  [ok] 音乐播放器已就绪（CONFIG.audio ${list.length} 首，${list.length - bad.length} 首可播放）`);
+        if (!json) continue;
+        try {
+          const list = new Function('return ' + json)();
+          if (Array.isArray(list) && list.length) bad = list.filter((t) => !t.list || !t.list[0]).length;
+        } catch { /* ignore */ }
+        if (found) break;
+      }
+      if (bad === found) {
+        err(`theme.audio 的 ${found} 条全部缺少 list[0] 音频地址 —— 播放器有列表但放不出声`);
       } else {
-        err('CONFIG.audio 为空数组 —— 播放器无内容。');
+        console.log(`  [ok] 音乐播放器已就绪（theme.audio ${found} 首，首曲「${sample}」，已进产物 JS）`);
       }
     }
   }
 }
+
 
 // ---------- 6. 占位内容检查 ----------
 

@@ -37,6 +37,97 @@ image_list:
   - /assets/cover-15.jpg
 index_images: []
 image_server: null
+audio:
+  - title: "我不难过"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=287398"
+  - title: "海屿你"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=1973665667"
+  - title: "忘不掉的你"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=1851652156"
+  - title: "明知故犯"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=3342319503"
+  - title: "甲乙丙丁 (你我怎么两清)"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=3399839173"
+  - title: "红"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=1918576268"
+  - title: "恋人"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=2600493765"
+  - title: "茶汤"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=316157"
+  - title: "碎碎念"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=2097443876"
+  - title: "如果呢"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=1842728629"
+  - title: "玻璃"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=3382908505"
+  - title: "罗生门（Follow）"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=1456890009"
+  - title: "失眠"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=273114"
+  - title: "我怀念的"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=287063"
+  - title: "两 难"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=2163210456"
+  - title: "自由的你"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=3436855494"
+  - title: "回到你身边"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=3397415408"
+  - title: "于是"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=1303464858"
+  - title: "雨过后的风景"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=215382"
+  - title: "左转灯 (1000 Times +1)"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=2755710644"
+  - title: "Whatever Happens"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=21178386"
+  - title: "一半一半"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=3333988321"
+  - title: "遐想"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=2018733994"
+  - title: "还是会想你"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=1827600686"
+  - title: "偷心"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=554322674"
+  - title: "嗜好"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=1391891631"
+  - title: "雨爱"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=316100"
+  - title: "Lost "
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=479979029"
+  - title: "梦哑"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=3387477661"
+  - title: "特别的人"
+    list:
+      - "https://meting.mikus.ink/api?server=netease&type=url&id=28403111"
 modules:
   debug: false
   player: true
@@ -145,7 +236,6 @@ menu:
   rss: /rss/ || cloud
   wiki: /wiki/ || sitemap
   status: /status/ || heartbeat
-  music: /music/ || cloud-music
 twikoo:
   enable: false
   mode: tencent
