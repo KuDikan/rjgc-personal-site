@@ -162,7 +162,7 @@ async function main() {
   writeFileSync(OUT_FILE, JSON.stringify(sortDeep(payload), null, 2) + '\n', 'utf8');
   log(`music.json  ${tracks.length} 首，其中 ${playable} 首有音频地址`);
 
-  syncThemeAudio(tracks);
+  syncThemeAudio();
 }
 
 /**
@@ -191,27 +191,41 @@ async function main() {
  *     audio:
  *       - title: 列表名
  *         list:
- *           - https://.../audio.mp3
- * initAudioPlayer 取 item.list[0] 作为音频地址，故每组放一首即可。
+ *           - https://music.163.com/#/playlist?id=<歌单ID>
+ *
+ * ## 关键：list 里放**歌单链接**，不是解析后的音频直链
+ *
+ * nyx-player 内置了对主流音乐平台的解析（见其 dist 里 parserURL 的匹配表）：
+ *   music.163.com.*playlist.*id=(\d+)   → netease / playlist
+ *   music.163.com.*song.*id=(\d+)      → netease / song
+ *   y.qq.com.*playlist/(\w+)           → tencent / playlist
+ *   …… y.qq.com.*song/(\w+)
+ *
+ * 匹配不上就抛 `Error: Unsupported URL: <url>`，播放器整个挂掉。
+ * 它还会**自己**去拉歌单（内置meting 端点 https://api.injahow.cn/meting/），
+ * 所以不需要我们预先解析出每首的音频地址。
+ *
+ * 踩过的坑：先前把 meting 解析出的单曲地址
+ *（https://meting.../api?server=netease&type=url&id=xxx）填进去，
+ * 结果运行时抛 Unsupported URL——那条地址不匹配任何 provider 正则。
+ * 正确做法是直接给网易云歌单/单曲**页面链接**。
  */
-function syncThemeAudio(tracks) {
+function syncThemeAudio() {
   const themeYml = join(root, '_config.shokax.yml');
   if (!existsSync(themeYml)) {
     warn(`未找到 ${themeYml}，跳过 theme.audio 写入`);
     return;
   }
 
-  const list = tracks.slice(0, PLAYLIST_LIMIT).map((t) => ({
-    title: t.name,
-    list: [t.url],
-  }));
+  // 播放器要的是平台页面链接，它自己会解析并拉取歌单详情
+  const playlistUrl = `https://music.163.com/#/playlist?id=${PLAYLIST_ID}`;
+  const block =
+    'audio:\n' +
+    `  - title: ${JSON.stringify(`网易云歌单 ${PLAYLIST_ID}`)}\n` +
+    '    list:\n' +
+    `      - ${JSON.stringify(playlistUrl)}\n`;
 
   let text = readFileSync(themeYml, 'utf8');
-
-  // 整块替换已有的顶层 audio:（可能不存在），保持其余内容原样。
-  // 不用 js-yaml dump 整个文件——那会重排键顺序并丢掉所有注释。
-  const block =
-    'audio:\n' + list.map((t) => `  - title: ${JSON.stringify(t.title)}\n    list:\n      - ${JSON.stringify(t.list[0])}`).join('\n');
 
   /**
    * 替换整个 audio 块，而不是只替换 `audio:` 那一行。
@@ -227,16 +241,16 @@ function syncThemeAudio(tracks) {
     let end = start + 1;
     // 列表项形如 `  - title: ...` / `    list:` / `      - <url>`
     while (end < lines.length && /^(\s+-\s|\s{4}\S)/.test(lines[end])) end++;
-    lines.splice(start, end - start, ...block.split('\n'));
+    lines.splice(start, end - start, ...block.trimEnd().split('\n'));
   } else {
     // 没有 audio 段：插到 modules: 之前
     const at = lines.findIndex((l) => /^modules:/.test(l));
-    lines.splice(at < 0 ? 0 : at, 0, ...block.split('\n'), '');
+    lines.splice(at < 0 ? 0 : at, 0, ...block.trimEnd().split('\n'), '');
   }
   text = lines.join('\n');
 
   writeFileSync(themeYml, text, 'utf8');
-  log(`已写入 _config.shokax.yml 的 theme.audio（${list.length} 首，站点级生效）`);
+  log(`已写入 theme.audio → ${playlistUrl}`);
 }
 
 await main();
