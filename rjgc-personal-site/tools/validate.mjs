@@ -500,6 +500,39 @@ for (const [href, label, expectArrow] of MENU_EXPECT) {
 }
 
 
+
+// 播放/暂停图标切换：主题靠 #tool.playing 这个 class 换图标
+// （#tool.playing .player .play-pause::before），但 ShokaX 0.5.4 自身
+// 不给 #tool 加这个 class，需由 scripts/player-playing-class.js 补上。
+// 缺了它：音频能正常播放暂停，但按钮图标恒为播放三角。
+{
+  const sample = join(PUBLIC_DIR, 'index.html');
+  let ok = false;
+  if (existsSync(sample)) {
+    const html = readFileSync(sample, 'utf8');
+    ok = html.includes('__toolPlayingBound') &&
+         html.includes("classList.add('playing')") &&
+         html.includes("classList.remove('playing')");
+    if (!ok) {
+      err('播放状态同步脚本未注入 —— 播放时按钮图标不会在播放/暂停间切换' +
+          '（主题靠 #tool.playing 这个 class 换图标，但 0.5.4 自身不加）。');
+    }
+  }
+  // CSS 侧的图标规则必须存在，否则加了 class 也没用
+  const cssDir = join(PUBLIC_DIR, 'css');
+  if (existsSync(cssDir)) {
+    const hasRule = readdirSync(cssDir)
+      .filter((f) => f.endsWith('.css'))
+      .some((f) => /#tool.playing[^{]*.play-pause/.test(readFileSync(join(cssDir, f), 'utf8')));
+    if (!hasRule) {
+      err('CSS 中缺少 `#tool.playing .player .play-pause::before` 规则 —— ' +
+          '播放图标无法切换。');
+    } else if (!errors.length) {
+      console.log('  [ok] 播放状态同步脚本已注入且 CSS 图标规则存在');
+    }
+  }
+}
+
 // ---------- 6. 占位内容检查 ----------
 
 function validatePlaceholders() {
