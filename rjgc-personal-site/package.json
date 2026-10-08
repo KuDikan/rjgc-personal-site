@@ -18,9 +18,11 @@
     "preview": "wrangler dev",
     "deploy": "wrangler deploy",
     "verify:theme": "node tools/verify-theme.mjs",
+    "verify:search": "node tools/verify-search.mjs",
     "data": "node tools/build-data.mjs",
+    "music": "node tools/build-music.mjs",
     "data:validate": "node tools/validate.mjs",
-    "ci:build": "npm run verify:theme && npm run data && npm run data:validate && npm run build"
+    "ci:build": "npm run verify:theme && npm run data && npm run music && npm run build && npm run verify:search && npm run data:validate"
   },
   "devDependencies": {
     "hexo": "7.3.0",

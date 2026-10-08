@@ -26,6 +26,15 @@
     {
       "feedId": "cloudflare-blog",
       "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:ab59c26010b6f11d5b242997",
+      "link": "https://blog.cloudflare.com/agentic-security-operations/",
+      "published": "Wed, 07 Oct 2026 16:30:36 GMT",
+      "summary": "Cloudflare Managed Defense uses a team of specialized AI agents built on Workers and global network telemetry to analyze security alerts. By separating deterministic evidence collection from model inference, the system delivers grounded recommendations to Managed Defense Analysts.",
+      "title": "Building an evidence-grounded agentic security operations harness on Cloudflare"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
       "id": "cloudflare-blog:3d9c7800b1392d7453f4fac2",
       "link": "https://blog.cloudflare.com/root-ksk-2024-rollover/",
       "published": "Tue, 06 Oct 2026 17:50:11 GMT",
@@ -112,6 +121,15 @@
       "published": "Fri, 02 Oct 2026 13:00:00 GMT",
       "summary": "We’re announcing the closed beta of a self-serve Cloudflare OHTTP Gateway. We’re also renaming our Privacy Gateway to Cloudflare OHTTP Relay to better distinguish the two products.",
       "title": "Announcing Cloudflare OHTTP Gateway – expanding access to Cloudflare’s privacy-preserving infrastructure"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:c6fb2b313984d9d24e982a57",
+      "link": "https://github.blog/ai-and-ml/github-copilot/secret-protection-must-scale-with-software/",
+      "published": "Wed, 07 Oct 2026 17:45:34 +0000",
+      "summary": "Developers aren’t becoming more careless; they’re being outpaced. The tools that let developers create more software should also take on more of the work of protecting it. The post Secret protection must scale with software appeared first on The GitHub Blog.",
+      "title": "Secret protection must scale with software"
     },
     {
       "feedId": "github-blog",

@@ -1,172 +1,142 @@
-# ==========================================================================
-#  ShokaX 主题配置
-#  这是本站自己的配置文件（从主题默认 _config.yml 拷贝并按需修改）。
-#  主题源码本身不做任何修改，以满足 AGPL §7(b) 的署名义务。
-# ==========================================================================
-
-alternate: "Ku" # 站点大标题
-
-statics: "/" # 静态文件根目录
-assets: "assets"
-css: "css"
-js: "js"
-
-open_graph:
-
-grayMode: false # 全站黑白滤镜
-
+alternate: Ku
+statics: /
+assets: assets
+css: css
+js: js
+open_graph: null
+grayMode: false
 pwa:
   enable: false
-
-# 实验性特性
 experiments:
   mobileWidth: 820px
   copyrightLength: 50
   antiFakeWebsite: true
-
 homeConfig:
   gradient: false
-  fixedCover: "" # 留空则从 image_list 随机取图
+  fixedCover: ''
   coverConfig:
     enableCover: true
     enablePreload: true
     enableNextGradientCover: false
   cateCards: []
-
-# 首页/归档等处的随机封面。
-#
-# 注意：不要在这里配image_list —— 主题的 before_generate 过滤器会用
-# source/_data/images.yml 的 images 字段**覆盖** image_list。
-# 正确做法是编辑 source/_data/images.yml（至少 6 张，否则构建会中止）。
 image_list:
-  - /assets/cover-1.svg
-  - /assets/cover-2.svg
-  - /assets/cover-3.svg
-  - /assets/cover-4.svg
-  - /assets/cover-5.svg
-  - /assets/cover-6.svg
-
-# 若想让文章页头图使用另一组图片，在此指定；留空则复用 image_list
+  - /assets/cover-1.jpg
+  - /assets/cover-2.jpg
+  - /assets/cover-3.jpg
+  - /assets/cover-4.jpg
+  - /assets/cover-5.jpg
+  - /assets/cover-6.jpg
+  - /assets/cover-7.jpg
+  - /assets/cover-8.jpg
+  - /assets/cover-9.jpg
+  - /assets/cover-10.jpg
+  - /assets/cover-11.jpg
+  - /assets/cover-12.jpg
+  - /assets/cover-13.jpg
+  - /assets/cover-14.jpg
+  - /assets/cover-15.jpg
 index_images: []
-
-# 图片处理服务（用于 _image_url 生成缩略图）；留空表示直接使用原图
-image_server:
-
-# ShokaX 模块化分包：关闭未使用的模块以减小体积
+image_server: null
 modules:
   debug: false
-  player: false      # v1 关闭音乐播放器（依赖境外 meting API）
+  player: false
   fireworks: true
   visibilityListener: true
   tabs: true
   quiz: true
-  # 使用 Cloudflare Rocket 等优化功能时才需要开启
   cloudflarePatch: false
-
 performance:
   preConnect: []
   dnsPrefetch: []
-
 icon:
-  favicon: "/favicon.ico"
-  apple_touch_icon: "/apple-touch-icon.png"
-
+  favicon: /favicon.ico
+  apple_touch_icon: /apple-touch-icon.png
 seo:
-  bing:
-  google:
-  yandex:
-  baidu:
-
+  bing: null
+  google: null
+  yandex: null
+  baidu: null
 visitor:
   clarity: false
   baiduAnalytics: false
   googleAnalytics: false
-
 darkmode: true
 auto_dark:
   enable: true
   start: 20
   end: 7
-
 auto_scroll: false
-
 loader:
   start: true
   switch: false
-
 fireworks:
   enable: true
   options:
-    excludeElements: ["a"]
+    excludeElements:
+      - a
     particles:
       - shape: circle
-        move: ["emit"]
+        move:
+          - emit
         easing: easeOutExpo
         colors:
-          - "rgba(255,182,185,.9)"
-          - "rgba(250,227,217,.9)"
-          - "rgba(187,222,214,.9)"
-          - "rgba(138,198,209,.9)"
+          - rgba(255,182,185,.9)
+          - rgba(250,227,217,.9)
+          - rgba(187,222,214,.9)
+          - rgba(138,198,209,.9)
         number: 30
-        duration: [1200, 1800]
+        duration:
+          - 1200
+          - 1800
         shapeOptions:
-          radius: [16, 32]
+          radius:
+            - 16
+            - 32
       - shape: circle
-        move: ["diffuse"]
+        move:
+          - diffuse
         easing: easeOutExpo
-        colors: ["#fff"]
+        colors:
+          - '#fff'
         number: 1
-        duration: [1200, 1800]
+        duration:
+          - 1200
+          - 1800
         shapeOptions:
           radius: 20
           alpha: 0.5
           lineWidth: 6
-
-# 字体：Google Fonts 在国内不可稳定访问，v1 关闭外部字体加载
 font:
   enable: false
   loadFromGoogle: false
   global:
     external: false
-    family:
-    size:
+    family: null
+    size: null
   logo:
     external: false
-    family:
+    family: null
     size: 3
   title:
     external: false
-    family:
+    family: null
     size: 2.2
   headings:
     external: false
-    family:
-    size:
+    family: null
+    size: null
   posts:
     external: false
-    family:
-    size:
+    family: null
+    size: null
   codes:
     external: false
-    family:
-    size:
-
-iconfont: "4415496_59g1326wajd"
-
-# ==========================================================================
-#  导航菜单 —— 七个分区
-#
-#  两种写法的区别很关键（见 layout/_partials/sidebar/menu.pug）：
-#   - **单值**（`key: /path/ || icon`）→ 渲染为普通 li.item，**不带下箭头**
-#   - **对象**（`key: { default: ... }`）→ 渲染为 li.item.dropdown，**带下箭头**
-#
-#  只有一个入口的菜单项务必用单值。否则会出现"点击箭头展开，
-#  里面还是同一个页面"的无意义下拉。只有多入口的分区才用对象。
-# ==========================================================================
+    family: null
+    size: null
+iconfont: 4415496_59g1326wajd
 menu:
   home: / || home
   about: /about/ || user
-  # posts 是真正的多入口分区（列表/归档/标签），保留下拉
   posts:
     default: /categories/ || feather
     archives: /archives/ || list-alt
@@ -175,83 +145,57 @@ menu:
   rss: /rss/ || loop
   wiki: /wiki/ || sitemap
   status: /status/ || heartbeat
-
-# 评论：v1全部关闭，避免依赖境外服务
 twikoo:
   enable: false
   mode: tencent
-  envId:
-  region:
-
+  envId: null
+  region: null
 waline:
   enable: false
-  serverURL:
-  lang: "zh-CN"
+  serverURL: null
+  lang: zh-CN
   locale: {}
-
 summary:
   enable: false
-
-# 搜索：v1 关闭 pagefind（需额外 CLI 步骤），使用主题内置的本地搜索
 pagefind:
   enable: false
-
-# Social Links: `Key: permalink || icon || color`
 social:
   github: https://github.com/KuDikan || github || "#191717"
   email: mailto:you@example.com || envelope || "#55acd5"
-
 sidebar:
   position: left
-  avatar: avatar.png
-
+  avatar: avatar.jpg
 widgets:
   random_posts: true
-  # 评论未开启，此项必须为 false
   recent_comments: false
-
 footer:
   since: 2026
   icon:
     name: sakura rotate
-    color: "#ffc0cb"
+    color: '#ffc0cb'
   count: true
-  # !! powered 必须保持 true !!
-  # 主题在此处输出指向 ShokaX 仓库的署名链接，是 AGPL-3.0 §7(b) 要求的署名义务。
-  # 关闭它将违反主题的使用限制。scripts/validate.mjs 会对该链接做断言。
   powered: true
   icp:
     enable: false
-
 post:
   count: true
-
 outime:
   enable: false
   days: 90
-
 reward:
-  # v1 关闭：未配置收款码，且避免占位图片影响观感
   enable: false
-
 tagcloud:
   min: 16
   max: 22
-  start: "#72cecf"
-  end: "#ffbac3"
+  start: '#72cecf'
+  end: '#ffbac3'
   amount: 200
-
 creative_commons:
   license: by-nc-sa
   language: deed.zh
-
 search:
   hits:
     per_page: 10
-
-# ==========================================================================
-#  第三方 CDN —— 不要随意修改
-# ==========================================================================
 vendors:
   cdns:
     cdnjs: https://s4.zstatic.net/ajax/libs
@@ -260,9 +204,9 @@ vendors:
       copy_tex:
         source: cdnjs
         url: KaTeX/0.16.9/contrib/copy-tex.min.js
-        sri: "sha384-ww/583aHhxWkz5DEVn6OKtNiIaLi2iBRNZXfJRiY1Ai7tnJ9UXpEsyvOITVpTl4A"
+        sri: sha384-ww/583aHhxWkz5DEVn6OKtNiIaLi2iBRNZXfJRiY1Ai7tnJ9UXpEsyvOITVpTl4A
   css:
     katex:
       source: cdnjs
       url: KaTeX/0.16.9/katex.min.css
-      sri: "sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+      sri: sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV

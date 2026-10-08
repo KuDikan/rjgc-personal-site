@@ -5,18 +5,25 @@
 #
 # 两个关键点：
 #  1. 本文件根节点必须**直接是数组**。若写成 `images: [...]`，
-#     data.images 会变成整个对象 {images: [...]}，其 .length 为 undefined，
+#     data.images 会变成整个对象 {images: [...]},其 .length 为 undefined，
 #     主题判定为"未配置"并回退到包内空的 _images.yml。
-#  2. 至少 6 张。少于 6 张时 randomBG() 抛错并中止构建
-#     （源码注释：少于 6 项会阻塞主线程导致终端崩溃）。
-#     npm 包自带的 _images.yml 是 0 字节空文件，所以必须自己提供。
+#  2. 至少 6 张。少于 6 张时 randomBG() 抛错并中止构建。
 #
-# 使用本地 SVG，不依赖任何境外随机图服务。
-# 注意 source/_data/assets/ 下必须是**扁平结构**：主题的 images 生成器
-# 会对该目录 readdir 后逐个 readFile，嵌套子目录会触发 EISDIR。
-- /assets/cover-1.svg
-- /assets/cover-2.svg
-- /assets/cover-3.svg
-- /assets/cover-4.svg
-- /assets/cover-5.svg
-- /assets/cover-6.svg
+# 注意：source/_data/assets/ 下必须是**扁平结构**——主题的 images 生成器
+# 会对该目录 readdir 后逐个readFile，嵌套子目录会触发 EISDIR。
+
+  - /assets/cover-1.jpg
+  - /assets/cover-2.jpg
+  - /assets/cover-3.jpg
+  - /assets/cover-4.jpg
+  - /assets/cover-5.jpg
+  - /assets/cover-6.jpg
+  - /assets/cover-7.jpg
+  - /assets/cover-8.jpg
+  - /assets/cover-9.jpg
+  - /assets/cover-10.jpg
+  - /assets/cover-11.jpg
+  - /assets/cover-12.jpg
+  - /assets/cover-13.jpg
+  - /assets/cover-14.jpg
+  - /assets/cover-15.jpg

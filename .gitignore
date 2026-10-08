@@ -14,6 +14,11 @@ rjgc-personal-site/db.json
 rjgc-personal-site/.deploy/
 .wrangler/
 
+# 音乐播放器音源：音频文件体积大且属个人素材，不入库。
+# 需要部署时把文件放到 source/audio/，或改为用 Git LFS 跟踪。
+rjgc-personal-site/source/audio/*
+!rjgc-personal-site/source/audio/README.md
+
 # Secrets
 .env
 .env.*

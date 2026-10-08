@@ -379,7 +379,103 @@ for (const [href, label, expectArrow] of MENU_EXPECT) {
     err('public/search.xml 中没有任何 <entry> —— 本地搜索将永远返回空结果');
   }
 
-  if (!errors.length) console.log(`  [ok] 本地搜索已注入且索引非空（抽查 ${checked} 页）`);
+  // 关键：必须自建弹窗 DOM。
+  // 主题的搜索依赖构建期常量 __shokax_algolia_search__（无 Algolia 凭据时
+  // 被 tree-shake 掉），按钮**渲染出来但没有任何监听器**——这正是"点不了"的原因。
+  // 而主题的 #search 容器只由那条被摇掉的分支动态创建，因此本插件必须自建。
+  // 只断言"脚本已注入"是不够的：上一版就是注入成功但按钮依然点不动。
+  const sampleHtml = existsSync(sample[0]) ? readFileSync(sample[0], 'utf8') : '';
+  if (sampleHtml) {
+    if (!/id="search"/.test(sampleHtml) && !/getElementById\('search'\)|createElement\('div'\)[\s\S]{0,200}id = 'search'/.test(sampleHtml)) {
+      err('本地搜索脚本未自建 #search 弹窗 DOM —— 主题的弹窗由 Algolia 分支创建，' +
+          '该分支在无凭据时已被 tree-shake，按钮会可点但无反应。');
+    }
+    if (!/class="search-input"/.test(sampleHtml)) {
+      err('本地搜索脚本未创建 .search-input 输入框 —— 主题的输入框由 instantsearch 渲染，' +
+          '本场景下不存在。');
+    }
+    if (!/loadIndex|fetch\(INDEX_URL\)/.test(sampleHtml)) {
+      err('本地搜索脚本缺少索引加载逻辑（fetch search.xml）。');
+    }
+  }
+
+  if (!errors.length) console.log(`  [ok] 本地搜索已注入、弹窗自建且索引非空（抽查 ${checked} 页）`);
+}
+
+// ---------- 5f. 封面图与音乐播放器 ----------
+
+// 封面：images.yml 声明的每一张都必须真实存在于 public/assets/。
+// 主题的 randomBG 不会检查文件是否存在，缺图只会显示空白封面。
+{
+  const imgYml = join(root, 'source', '_data', 'images.yml');
+  if (!existsSync(imgYml)) {
+    warn('source/_data/images.yml 不存在，封面将回退到主题默认（可能是空）');
+  } else {
+    const list = readFileSync(imgYml, 'utf8')
+      .split('\n')
+      .map((l) => l.trim())
+      .filter((l) => l.startsWith('- '))
+      .map((l) => l.slice(2).trim());
+
+    if (list.length < 6) {
+      err(`images.yml 只声明了 ${list.length} 张封面，少于 6 张会导致构建中止` +
+          '（主题 randomBG 的硬性要求）。');
+    }
+    const missing = list.filter((p) => !existsSync(join(PUBLIC_DIR, p.replace(/^\//, ''))));
+    if (missing.length) {
+      err(`images.yml 声明的封面在产物中不存在：${missing.slice(0, 5).join('、')}` +
+          (missing.length > 5 ? ` 等 ${missing.length} 张` : ''));
+    }
+    if (!errors.length) console.log(`  [ok] 封面 ${list.length} 张均存在于产物`);
+
+    // 顺带校验侧栏头像
+    const avatar = 'assets/avatar.jpg';
+    if (!existsSync(join(PUBLIC_DIR, avatar))) {
+      err(`缺少侧栏头像 ${avatar}（_config.shokax.yml 的 sidebar.avatar 指向它）`);
+    }
+  }
+}
+
+// 音乐播放器：若 source/audio/ 下有音频，则必须已注入播放器；
+// 反之若没有音频，注入一个空播放器毫无意义，只应给出提示。
+{
+  const audioDir = join(root, 'source', 'audio');
+  let audioCount = 0;
+  if (existsSync(audioDir)) {
+    audioCount = readdirSync(audioDir)
+      .filter((f) => /\.(mp3|m4a|aac|ogg|wav|flac)$/i.test(f)).length;
+  }
+
+  const sample = join(PUBLIC_DIR, 'index.html');
+  if (existsSync(sample)) {
+    const html = readFileSync(sample, 'utf8');
+    const injected = html.includes('id="mp-dock"');
+
+    if (audioCount > 0 && !injected) {
+      err(`source/audio/ 下有 ${audioCount} 个音频文件，但播放器未注入` +
+          '（检查 scripts/music-player.js 是否加载、文件名是否含中文以外的字符）。');
+    }
+    if (injected) {
+      // 注入时必须自建 DOM 与 audio 元素，否则同样是"有壳无功能"
+      for (const [cond, msg] of [
+        [html.includes('id="mp-audio"'), '缺少 <audio id="mp-audio"> 元素'],
+        [html.includes('id="mp-toggle"'), '缺少展开按钮 #mp-toggle'],
+        [html.includes('id="mp-list"'), '缺少播放列表 #mp-list'],
+      ]) {
+        if (!cond) err(`音乐播放器不完整：${msg}`);
+      }
+      // 注入的音频地址必须都真实存在于产物
+      const srcs = [...html.matchAll(/"\/audio\/[^"]+\.(?:mp3|m4a|aac|ogg|wav|flac)"/g)]
+        .map((m) => m[0].slice(1, -1));
+      const badSrc = srcs.filter((s) => !existsSync(join(PUBLIC_DIR, s.replace(/^\//, ''))));
+      if (badSrc.length) {
+        err(`播放器引用了产物中不存在的音频：${badSrc.slice(0, 3).join('、')}`);
+      }
+      if (!errors.length) {
+        console.log(`  [ok] 音乐播放器已注入（${srcs.length} 首，音频均存在）`);
+      }
+    }
+  }
 }
 
 // ---------- 6. 占位内容检查 ----------
