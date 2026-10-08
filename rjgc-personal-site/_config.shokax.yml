@@ -114,15 +114,15 @@ font:
   loadFromGoogle: false
   global:
     external: false
-    family: LXGW WenKai Medium, -apple-system, PingFang SC, Microsoft YaHei, sans-serif
+    family: LXGW WenKai Medium
     size: null
   logo:
     external: false
-    family: Yozai Medium, serif
+    family: Yozai Medium
     size: 3
   title:
     external: false
-    family: LXGW WenKai Medium, serif
+    family: LXGW WenKai Medium
     size: 2.2
   headings:
     external: false
