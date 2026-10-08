@@ -350,56 +350,30 @@ for (const [href, label, expectArrow] of MENU_EXPECT) {
   }
 }
 
-// ---------- 5e. 本地搜索脚本必须已注入 ----------
-
-// 主题自带搜索依赖 Algolia 凭据，本站改用 scripts/local-search.js + search.xml。
-// 该脚本缺失时按钮仍可点但永远无结果（无报错），因此必须显式断言。
+// ---------- 5e. 站内搜索必须可用（Pagefind） ----------
+//
+// 用主题内置的 Pagefind 引擎（本地、无第三方凭据）。
+// 关键：Pagefind 是**构建后**索引，不在 hexo generate 里跑，
+// 所以 public/pagefind/ 目录由 `npm run search:index` 生成。
+// 漏掉这一步 → 搜索按钮可点但永远无结果，且不报错。
 {
-  const sample = ['', 'about/index.html', 'papers/index.html'].map((r) => join(PUBLIC_DIR, r === '' ? 'index.html' : r));
-  let injected = 0;
-  let checked = 0;
+  const shokaxYml = readFileSync(join(root, '_config.shokax.yml'), 'utf8');
+  const enabled = /pagefind:[\s\S]{0,80}?enable:\s*true/.test(shokaxYml);
+  const pfDir = join(PUBLIC_DIR, 'pagefind');
 
-  for (const p of sample) {
-    if (!existsSync(p)) continue;
-    checked++;
-    const html = readFileSync(p, 'utf8');
-    if (html.includes('__localSearchInstalled')) injected++;
-  }
-
-  if (checked && injected !== checked) {
-    err(`本地搜索脚本未注入全部抽查页面（${injected}/${checked}）—— ` +
-        'scripts/local-search.js 未生效，搜索按钮会可点但无结果。');
-  }
-
-  // 搜索索引必须存在且含条目，否则前端fetch 到空索引
-  const idx = join(PUBLIC_DIR, 'search.xml');
-  if (!existsSync(idx)) {
-    err('缺少 public/search.xml —— 本地搜索依赖该索引文件');
-  } else if ((readFileSync(idx, 'utf8').match(/<entry>/g) || []).length === 0) {
-    err('public/search.xml 中没有任何 <entry> —— 本地搜索将永远返回空结果');
-  }
-
-  // 关键：必须自建弹窗 DOM。
-  // 主题的搜索依赖构建期常量 __shokax_algolia_search__（无 Algolia 凭据时
-  // 被 tree-shake 掉），按钮**渲染出来但没有任何监听器**——这正是"点不了"的原因。
-  // 而主题的 #search 容器只由那条被摇掉的分支动态创建，因此本插件必须自建。
-  // 只断言"脚本已注入"是不够的：上一版就是注入成功但按钮依然点不动。
-  const sampleHtml = existsSync(sample[0]) ? readFileSync(sample[0], 'utf8') : '';
-  if (sampleHtml) {
-    if (!/id="search"/.test(sampleHtml) && !/getElementById\('search'\)|createElement\('div'\)[\s\S]{0,200}id = 'search'/.test(sampleHtml)) {
-      err('本地搜索脚本未自建 #search 弹窗 DOM —— 主题的弹窗由 Algolia 分支创建，' +
-          '该分支在无凭据时已被 tree-shake，按钮会可点但无反应。');
+  if (enabled && !existsSync(pfDir)) {
+    err('已启用 pagefind.enable: true，但产物中缺少 public/pagefind/ 索引目录 —— ' +
+        '搜索会可点但无结果。请确认构建命令包含 `npm run search:index`（即用 build:search）。');
+  } else if (enabled) {
+    const pf = join(pfDir, 'pagefind.js');
+    if (!existsSync(pf) || statSync(pf).size < 100) {
+      err('public/pagefind/pagefind.js 缺失或过小，索引未正确生成。');
+    } else {
+      console.log('  [ok] Pagefind 搜索索引已生成（主题内置引擎）');
     }
-    if (!/class="search-input"/.test(sampleHtml)) {
-      err('本地搜索脚本未创建 .search-input 输入框 —— 主题的输入框由 instantsearch 渲染，' +
-          '本场景下不存在。');
-    }
-    if (!/loadIndex|fetch\(INDEX_URL\)/.test(sampleHtml)) {
-      err('本地搜索脚本缺少索引加载逻辑（fetch search.xml）。');
-    }
+  } else {
+    warn('未启用 pagefind，站内搜索不可用（_config.shokax.yml 里设 pagefind.enable: true）');
   }
-
-  if (!errors.length) console.log(`  [ok] 本地搜索已注入、弹窗自建且索引非空（抽查 ${checked} 页）`);
 }
 
 // ---------- 5f. 封面图与音乐播放器 ----------

@@ -14,15 +14,16 @@
     "clean": "hexo clean",
     "gen": "hexo generate",
     "build": "npm run clean && npm run gen || npm run gen",
+    "search:index": "pagefind --site public",
+    "build:search": "npm run build && npm run search:index",
     "dev": "hexo server",
     "preview": "wrangler dev",
     "deploy": "wrangler deploy",
     "verify:theme": "node tools/verify-theme.mjs",
-    "verify:search": "node tools/verify-search.mjs",
     "data": "node tools/build-data.mjs",
     "music": "node tools/build-music.mjs",
     "data:validate": "node tools/validate.mjs",
-    "ci:build": "npm run verify:theme && npm run data && npm run music && npm run build && npm run verify:search && npm run data:validate"
+    "ci:build": "npm run verify:theme && npm run data && npm run music && npm run build:search && npm run data:validate"
   },
   "devDependencies": {
     "hexo": "7.3.0",
@@ -36,6 +37,7 @@
     "hexo-renderer-stylus": "3.0.1",
     "hexo-theme-shokax": "0.5.4",
     "nyx-player": "0.1.1",
+    "pagefind": "^1.5.2",
     "shokax-uikit": "0.0.5",
     "wrangler": "4.147.0"
   },

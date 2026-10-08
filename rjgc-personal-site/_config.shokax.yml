@@ -142,7 +142,7 @@ menu:
     archives: /archives/ || list-alt
     tags: /tags/ || tags
   papers: /papers/ || markdown
-  rss: /rss/ || loop
+  rss: /rss/ || cloud
   wiki: /wiki/ || sitemap
   status: /status/ || heartbeat
 twikoo:
@@ -158,7 +158,7 @@ waline:
 summary:
   enable: false
 pagefind:
-  enable: false
+  enable: true
 social:
   github: https://github.com/KuDikan || github || "#191717"
   email: mailto:you@example.com || envelope || "#55acd5"
