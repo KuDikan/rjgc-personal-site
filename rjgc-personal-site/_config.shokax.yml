@@ -171,10 +171,10 @@ menu:
     default: /categories/ || feather
     archives: /archives/ || list-alt
     tags: /tags/ || tags
-  papers: /papers/ || book
-  rss: /rss/ || rss
-  wiki: /wiki/ || bookmark
-  status: /status/ || pulse
+  papers: /papers/ || markdown
+  rss: /rss/ || loop
+  wiki: /wiki/ || sitemap
+  status: /status/ || heartbeat
 
 # 评论：v1全部关闭，避免依赖境外服务
 twikoo:

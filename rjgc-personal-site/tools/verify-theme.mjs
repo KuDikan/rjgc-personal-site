@@ -139,6 +139,46 @@ if (!existsSync(join(root, 'node_modules', 'hexo-renderer-stylus'))) {
   }
 }
 
+// ---- 6. 菜单图标名必须真实存在 ----
+// 图标字体里没有的字形名会**静默失效**：渲染成空 <i class="ic i-xxx"></i>，
+// 肉眼看到"图标不显示"，但构建与HTTP 状态都正常，不会有任何报错。
+// 这正是本站踩过的坑（book / rss / bookmark / pulse 四个名字在主题里并不存在）。
+{
+  const iconFontCss = join(THEME_DIR, 'source', 'css', '_iconfont.styl');
+  const menuRaw = readFileSync(join(root, '_config.shokax.yml'), 'utf8');
+
+  // 提取所有 `... || iconName` 形式的图标名
+  const declared = [...menuRaw.matchAll(/\|\|\s*([A-Za-z0-9_-]+)\s*$/gm)]
+    .map((m) => m[1])
+    .filter(Boolean);
+
+  if (!existsSync(iconFontCss)) {
+    warn(`找不到主题图标字体定义${iconFontCss}，跳过图标名校验`);
+  } else if (!declared.length) {
+    warn('_config.shokax.yml 的 menu 中未解析到任何图标名，跳过校验');
+  } else {
+    const css = readFileSync(iconFontCss, 'utf8');
+    const available = new Set(
+      [...css.matchAll(/^\.(i-[A-Za-z0-9_-]+)\s*:/gm)].map((m) => m[1])
+    );
+
+    // 同时校验 class 形式（i-xxx）与裸名（xxx）
+    const bad = [];
+    for (const name of new Set(declared)) {
+      const cls = `i-${name}`;
+      if (!available.has(cls)) bad.push(`${name}（应为 .${cls}）`);
+    }
+
+    if (bad.length) {
+      fail(`menu 中以下图标名在主题图标字体中不存在，**会导致图标不显示且不报错**：` +
+           bad.join('、') +
+           `。可用图标清单见 ${iconFontCss}（共 ${available.size} 个）。`);
+    } else {
+      console.log(`  [ok] menu 图标名 ${new Set(declared).size} 个均存在于主题图标字体（共 ${available.size} 个可用）`);
+    }
+  }
+}
+
 // ---- 输出 ----
 if (warnings.length) {
   console.log('\n警告：');

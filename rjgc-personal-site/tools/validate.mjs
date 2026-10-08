@@ -323,6 +323,65 @@ for (const [href, label, expectArrow] of MENU_EXPECT) {
   if (!errors.length) console.log(`  [ok] 导航栏 ${MENU_EXPECT.length} 项中文文案与箭头状态正确`);
 }
 
+// ---------- 5d. 双向链接必须已渲染 ----------
+
+// [[标题]] 语法需要 scripts/wiki-links.js 支持，主题本身不认。
+// 若插件失效，页面会原样显示方括号——文件正常、HTTP 200，校验若只看这些就会漏。
+{
+  const wikiPages = ['wiki/index.html', 'how-to-prioritize/index.html', 'agent-requirements/index.html'];
+  let total = 0;
+  let leftover = 0;
+
+  for (const rel of wikiPages) {
+    const p = join(PUBLIC_DIR, rel);
+    if (!existsSync(p)) continue;
+    const html = readFileSync(p, 'utf8');
+    total += (html.match(/class="wiki-link"/g) || []).length;
+    // 文档正文里说明语法用的方括号不在 <a> 中，需排除 code/pre 内的示例
+    const outside = html.replace(/<code[\s\S]*?<\/code>/g, '').replace(/<pre[\s\S]*?<\/pre>/g, '');
+    leftover += (outside.match(/\[\[[^\]\n]+\]\]/g) || []).length;
+  }
+
+  if (leftover) {
+    err(`仍有 ${leftover} 处 [[...]] 未被渲染成链接 —— scripts/wiki-links.js 可能未生效。`);
+  }
+  if (!errors.length) {
+    console.log(`  [ok] 双向链接已渲染（抽查 ${wikiPages.length} 页，命中 ${total} 处）`);
+  }
+}
+
+// ---------- 5e. 本地搜索脚本必须已注入 ----------
+
+// 主题自带搜索依赖 Algolia 凭据，本站改用 scripts/local-search.js + search.xml。
+// 该脚本缺失时按钮仍可点但永远无结果（无报错），因此必须显式断言。
+{
+  const sample = ['', 'about/index.html', 'papers/index.html'].map((r) => join(PUBLIC_DIR, r === '' ? 'index.html' : r));
+  let injected = 0;
+  let checked = 0;
+
+  for (const p of sample) {
+    if (!existsSync(p)) continue;
+    checked++;
+    const html = readFileSync(p, 'utf8');
+    if (html.includes('__localSearchInstalled')) injected++;
+  }
+
+  if (checked && injected !== checked) {
+    err(`本地搜索脚本未注入全部抽查页面（${injected}/${checked}）—— ` +
+        'scripts/local-search.js 未生效，搜索按钮会可点但无结果。');
+  }
+
+  // 搜索索引必须存在且含条目，否则前端fetch 到空索引
+  const idx = join(PUBLIC_DIR, 'search.xml');
+  if (!existsSync(idx)) {
+    err('缺少 public/search.xml —— 本地搜索依赖该索引文件');
+  } else if ((readFileSync(idx, 'utf8').match(/<entry>/g) || []).length === 0) {
+    err('public/search.xml 中没有任何 <entry> —— 本地搜索将永远返回空结果');
+  }
+
+  if (!errors.length) console.log(`  [ok] 本地搜索已注入且索引非空（抽查 ${checked} 页）`);
+}
+
 // ---------- 6. 占位内容检查 ----------
 
 function validatePlaceholders() {
