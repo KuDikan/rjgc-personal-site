@@ -179,6 +179,34 @@ if (!existsSync(join(root, 'node_modules', 'hexo-renderer-stylus'))) {
   }
 }
 
+// ---- 7. lockfile 与 package.json 是否同步（防 npm ci 在 CI 上失败） ----
+// 背景：这个坑踩过两次。依赖树里有三套 esbuild
+// （aether/theme 要 ^0.25.8、vite 要 ^0.27||^0.28、wrangler 锁 0.28.1），
+// 一旦 wrangler 要求的补丁版本被 npm解析到更新版本（如 0.28.1 → 0.28.2），
+// 本地 npm install 生成的 lockfile 与 CI 上 npm ci 的期望就不一致，
+// CI 报 "Missing: esbuild@x.y.z from lock file" 而本地一切正常。
+// 现在用 overrides 把 esbuild 全系钉死，并在此断言 lockfile 已同步。
+{
+  const pkg = readPkg(root);
+  const lockPath = join(root, 'package-lock.json');
+  if (!pkg || !existsSync(lockPath)) {
+    warn('package.json 或 package-lock.json 缺失，跳过同步校验');
+  } else {
+    const declared = Object.keys(pkg.devDependencies || {});
+    const missing = declared.filter(
+      (name) => pkg.devDependencies[name] && !existsSync(join(root, 'node_modules', name))
+    );
+    if (missing.length && existsSync(join(root, 'node_modules'))) {
+      fail(`以下已声明的依赖在 node_modules 中不存在：${missing.join('、')}。` +
+           '请执行 npm install 后再构建（CI 用 npm ci，会因 lockfile 不同步而失败）。');
+    } else if (missing.length) {
+      warn(`node_modules 未安装，跳过依赖存在性检查（缺 ${missing.length} 个）`);
+    } else {
+      console.log(`  [ok] 已声明依赖 ${declared.length} 个均已安装（lockfile 已同步）`);
+    }
+  }
+}
+
 // ---- 输出 ----
 if (warnings.length) {
   console.log('\n警告：');
