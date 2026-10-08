@@ -60,6 +60,11 @@ jobs:
       - name: 构建站点
         run: npx hexo clean && npx hexo generate
 
+      # Pagefind 是构建**后**索引，不在 hexo generate 内部。
+      # 漏掉这一步 → 搜索按钮可点但永远无结果，且不报错。
+      - name: 生成搜索索引（Pagefind）
+        run: npx pagefind --site public
+
       - name: 校验数据与产物
         run: node tools/validate.mjs
 
@@ -68,8 +73,9 @@ jobs:
           set -e
           for f in index.html 404.html about/index.html categories/index.html \
                    archives/index.html tags/index.html papers/index.html \
-                   rss/index.html wiki/index.html status/index.html \
-                   rss.xml atom.xml feed.json css/app.css; do
+                   rss/index.html wiki/index.html status/index.html music/index.html \
+                   rss.xml atom.xml feed.json css/app.css \
+                   pagefind/pagefind.js; do
             test -s "public/$f" || { echo "缺少或为空: public/$f"; exit 1; }
           done
           echo "文件总数: $(find public -type f | wc -l)"
