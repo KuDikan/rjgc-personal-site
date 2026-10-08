@@ -84,40 +84,11 @@ jobs:
       # 播放器数据必须真的进了 JS bundle。只检查 _config.shokax.yml 里有
       # audio 是不够的——数据可能停在配置里没被打包，运行时 CONFIG.audio
       # 仍是 undefined，前端会抛 TypeError 并静默失效（按钮在、点了没反应）。
+      # 注意：本job 已设 working-directory: rjgc-personal-site，不要再 cd。
       - name: 断言播放器数据已进产物
         run: |
           set -e
-          cd rjgc-personal-site
-          node -e '
-            const { readFileSync, readdirSync } = require("node:fs");
-            let hit = 0, sample = "";
-            for (const f of readdirSync("public/js")) {
-              if (!f.endsWith(".js")) continue;
-              const s = readFileSync("public/js/" + f, "utf8");
-              const i = s.indexOf("audio:");
-              if (i < 0) continue;
-              const from = s.indexOf("[", i);
-              if (from < 0) continue;
-              // 括号计数：音频地址里含 "]"，不能用惰性匹配
-              let d = 0, inStr = false, json = null;
-              for (let k = from; k < s.length; k++) {
-                const c = s[k];
-                if (inStr) { if (c === "\\\\") { k++; continue; } if (c === "\"") inStr = false; continue; }
-                if (c === "\"") { inStr = true; continue; }
-                if (c === "[") d++;
-                else if (c === "]") { d--; if (!d) { json = s.slice(from, k + 1); break; } }
-              }
-              if (!json) continue;
-              try {
-                // 压缩后是 JS 对象字面量（键无引号），不是合法 JSON
-                const list = new Function("return " + json)();
-                if (Array.isArray(list) && list.length) { hit = list.length; sample = list[0]?.title ?? ""; break; }
-              } catch {}
-            }
-            if (!hit) { console.error("✗ 产物 JS 中没有 audio 配置 —— 播放器运行时会抛 TypeError"); process.exit(1); }
-            if (!sample) { console.error("✗ audio 条目缺少 title"); process.exit(1); }
-            console.log(`  [ok] 播放器数据已进产物：${hit} 首，首曲「${sample}」`);
-          '
+          node tools/verify-player-bundle.mjs
 
       - name: 上传构建产物
         uses: actions/upload-artifact@v4
