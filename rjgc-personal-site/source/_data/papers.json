@@ -1,8 +1,347 @@
 {
-  "count": 40,
+  "count": 50,
   "fetched": 20,
   "notes": "数据来自 arXiv 官方 API。摘要为论文原始摘要，未做解读；不将预印本描述为已同行评审。",
   "papers": [
+    {
+      "authors": [
+        "Xincheng He",
+        "Wanli Dong",
+        "Zhaoqiang Guo",
+        "Yan Liu",
+        "Lei Xu"
+      ],
+      "id": "2610.11514v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Fault injection is increasingly used to evaluate the reliability of tool-using LLM agents. However, there has been limited study of how fault-adoption results should be interpreted when the agent itself determines which authoritative observations become visible during execution. In this paper, we present a systematic study of this evidential validity problem in agent fault-injection evaluation.…",
+      "title": "SSCBench: Evaluating the Evidential Validity of Fault-Injection Tests for Tool-Using LLM Agents",
+      "url": "https://arxiv.org/abs/2610.11514v1"
+    },
+    {
+      "authors": [
+        "Hexuan Deng",
+        "Yue Wang",
+        "Wenyu Jiang",
+        "Cheng Yang",
+        "Haolin Yang",
+        "Zhaohua Zhang",
+        "Chenchen Zhao",
+        "Beiduo Chen",
+        "Muxi Chen",
+        "Sa Zhu",
+        "Geyuan Zhu",
+        "Jianhuan Zhuo",
+        "Qiuyong Xiao",
+        "Tianwen Jiang",
+        "Jihong Zhang",
+        "Xuebo Liu"
+      ],
+      "id": "2610.11559v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Coding assistants such as Claude Code and Codex have become a major application of LLM agents, yet existing benchmarks remain far from real-world use, particularly in task horizon and interaction length. Code assistants require completing long chains of development work in continuously evolving repositories, while repeatedly clarifying requirements and adapting implementations through multi-turn interaction.…",
+      "title": "SWE-Journey: Towards More Realistic Evaluation of Coding Assistants through Long-Horizon, Multi-Turn Interaction",
+      "url": "https://arxiv.org/abs/2610.11559v1"
+    },
+    {
+      "authors": [
+        "Yi Wen",
+        "Derong Xu",
+        "Pengyue Jia",
+        "Yichao Wang",
+        "Yingyi Zhang",
+        "Maolin Wang",
+        "Junyi Li",
+        "Wenlin Zhang",
+        "Xiaopeng Li",
+        "Yong Liu",
+        "Xiangyu Zhao"
+      ],
+      "id": "2610.11573v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "The memory capabilities of Large Language Models (LLMs) have garnered increasing attention recently. Despite great success achieved, existing retrieval-based memory approaches typically overlook the differences between memories and employ a unified strategy to process all memories, leading to suboptimal performance.…",
+      "title": "Memory Type Varies: Empowering LLM Agents for Long-Term Memory with Diverse Strategies",
+      "url": "https://arxiv.org/abs/2610.11573v1"
+    },
+    {
+      "authors": [
+        "Li Lu",
+        "Yanjie Zhao",
+        "Hongjie Chen",
+        "Haoyu Wang"
+      ],
+      "id": "2610.11602v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "LLM agents can spend millions of tokens during vulnerability discovery without producing a working proof of concept (PoC). What consumes that budget, and why does it fail to produce results? We diagnose these costs and failures through a multi-axis open-coding study of 200 CyberGym traces, spanning four agents (i.e., Codex, OpenCode, Cybench, and EnIGMA) under an unaided baseline and four existing efficiency methods. The study reveals three key findings.…",
+      "title": "Where Do the Tokens Go? Understanding and Reducing Costs in LLM Agents for Vulnerability Discovery",
+      "url": "https://arxiv.org/abs/2610.11602v1"
+    },
+    {
+      "authors": [
+        "Yuan Tian",
+        "Bing Hu",
+        "Hao Wang",
+        "Binghang Lu",
+        "Fang Wu"
+      ],
+      "id": "2610.11655v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Improving a long-horizon LLM agent means evolving the harness around a frozen model or training its weights. We let a self-evolving harness make the system stronger first, then cross seed and evolved harnesses with base and trained weights to learn which gains the trained model keeps and which still need the runtime.…",
+      "title": "Harness Evolution Hits a Ceiling: When Weight Training Should Begin",
+      "url": "https://arxiv.org/abs/2610.11655v1"
+    },
+    {
+      "authors": [
+        "Radhika Gaonkar"
+      ],
+      "id": "2610.11678v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Verifier scores now serve as both benchmark metrics and training rewards for large language model (LLM) agents, and a change in score is routinely read as a change in capability. It may instead reflect a change in the evaluation. We introduce TRACE, a protocol that turns a score change from a verdict into a testable diagnosis: it applies a targeted change to one part of an evaluation, compares paired runs, checks whether the agent's behavior changed, and rescores unchanged trajectories to test w…",
+      "title": "TRACE: Diagnosing Verifier Brittleness in Agentic Evaluation",
+      "url": "https://arxiv.org/abs/2610.11678v1"
+    },
+    {
+      "authors": [
+        "Guanghao Wu",
+        "Zhuo Cai",
+        "Shoujin Wang"
+      ],
+      "id": "2610.11732v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Large language model (LLM) agents for portfolio management learn from experience: they credit each experience in their memory with the outcome of the decisions that used it. In financial markets, however, this outcome mostly reflects the market move shared by all decisions on that date, so the credit tracks the market rather than the experience, and these agents often do worse than simply holding the equal-weight (1/$N$) portfolio.…",
+      "title": "MemTrial: Learning When to Trust Memory in LLM Portfolio Agents",
+      "url": "https://arxiv.org/abs/2610.11732v1"
+    },
+    {
+      "authors": [
+        "Younghwan Joo",
+        "Sung-il Kim"
+      ],
+      "id": "2610.11768v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Large language model (LLM) agents are beginning to operate industrial energy equipment, and what they get right depends on what they are told about the plant. Established building ontologies name many kinds of points across many sites, whereas an industrial equipment system needs few entities with much knowledge about each.…",
+      "title": "Narrow and Deep: An Ontology Tower as the Knowledge of an LLM Agent for an Industrial Equipment System",
+      "url": "https://arxiv.org/abs/2610.11768v1"
+    },
+    {
+      "authors": [
+        "Haoyu Zhao",
+        "Zhengxu Yu",
+        "Zhiyuan He",
+        "Meng Fang",
+        "Rasul Tutunov",
+        "Haitham Bou-Ammar",
+        "Weilin Luo",
+        "Jun Wang"
+      ],
+      "id": "2610.11794v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Learning to act in unfamiliar environments requires agents to infer how the world works and revise that understanding as new evidence arrives. Yet limited observations can support multiple world models that explain past interactions but predict different outcomes in unseen states. We introduce Memento 3, building on the Memento series to enable frozen LLM agents to continually learn explicit world models through external memory.…",
+      "title": "Memento 3: Model-Based Recursive Self-Improvement through Reflective Rulebooks",
+      "url": "https://arxiv.org/abs/2610.11794v1"
+    },
+    {
+      "authors": [
+        "Pierre Gentine",
+        "Dhruv Balwada",
+        "Aytaç Paçal",
+        "Linnia Hawkins",
+        "Alistair Adcroft",
+        "Hang Fan",
+        "Jianing Fang",
+        "Aya Lahlou",
+        "Kara D. Lamb",
+        "David M. Lawrence",
+        "Julien Le Sommer",
+        "Joseph Mouallem",
+        "Juan Nathaniel",
+        "Duncan Watson-Parris",
+        "Veronika Eyring"
+      ],
+      "id": "2610.11883v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Earth system models (ESMs) have grown tremendously in realism, yet key uncertainties persist in the climate response to greenhouse-gas forcing, particularly due to cloud radiative feedbacks. In addition, their software architecture was not designed for accelerator hardware or modern artificial intelligence (AI). Here we present legoESM, a composable, differentiable, multiscale ESM written in JAX.…",
+      "title": "legoESM: a modular, differentiable, multiscale, AI-ready Earth system model built with AI agents",
+      "url": "https://arxiv.org/abs/2610.11883v1"
+    },
+    {
+      "authors": [
+        "Irene Weber"
+      ],
+      "id": "2610.11899v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Large language models (LLMs) are increasingly embedded as components in software systems, marketed under labels such as chatbot, copilot, retrieval-augmented generation, workflow, coding agent and AI agent. Whether these labels denote genuine architectural forms or serve as branding has not been assessed systematically.…",
+      "title": "Forms of LLM-Integrated Applications from LLM-Chats to Autonomous AI Agent System",
+      "url": "https://arxiv.org/abs/2610.11899v1"
+    },
+    {
+      "authors": [
+        "Liping Fu"
+      ],
+      "id": "2610.11951v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "This study examines the construct validity of LLM-based generative agents in simulating reactive, proactive, and co-occurring aggression in children. Four distinct agents were instantiated using a theory-driven parameterization grounded in the social information processing model. A total of 1,920 simulation runs were conducted across eight social scenarios, employing a hybrid blind-coding pipeline to extract 32 quantitative behavioral indicators.…",
+      "title": "\"Hot-Blooded\" vs \"Cold-Blooded\": Simulating the Behavioral Phenotypes of Childhood Aggression via Generative Agents",
+      "url": "https://arxiv.org/abs/2610.11951v1"
+    },
+    {
+      "authors": [
+        "Xiangyi Zeng",
+        "Baihang Liu",
+        "Xutong Wang",
+        "Ze Jin",
+        "Yunpeng Li",
+        "Qixu Liu"
+      ],
+      "id": "2610.12124v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "The evolution of Large Language Model agents from single-task execution to long-term autonomous operation highlights the critical challenge of transforming continuous experiences into reusable knowledge. To address this, we propose Hippocam, a hierarchical memory and continual learning architecture.…",
+      "title": "Use and Disuse: Intent-Structured Experience Consolidation for Memory and Learning in LLM Agents",
+      "url": "https://arxiv.org/abs/2610.12124v1"
+    },
+    {
+      "authors": [
+        "Ming Chen",
+        "Rong-Xi Tan",
+        "Ke Xue",
+        "Yu-Jie Zhou",
+        "Taiye Lu",
+        "Zhi-Xuan Gao",
+        "Peng Xie",
+        "Zijun Shen",
+        "Chen Lu",
+        "Haopu Shang",
+        "Chao Qian"
+      ],
+      "id": "2610.12183v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Black-box optimization (BBO) arises in many scientific and engineering problems where objective evaluations are expensive and limited. Recent large language model (LLM) agents offer a new way to approach BBO by combining task semantics, computation, optimization tools, and feedback-driven decision making, showing great potential due to the integration with mathematically rigorous tools.…",
+      "title": "A Closer Look at Agentic BBO: Benchmarking LLM Agents for Black-Box Optimization",
+      "url": "https://arxiv.org/abs/2610.12183v1"
+    },
+    {
+      "authors": [
+        "Yudi Zhang",
+        "Mingyu Cao",
+        "Lu Yin",
+        "Mykola Pechenizkiy",
+        "Shiwei Liu"
+      ],
+      "id": "2610.12190v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "As claims about recursive self-improvement (RSI) and artificial general intelligence (AGI) proliferate, we ask a simple question: do frontier AI models have a sense of data, i.e., can they reliably select the right data for training? We introduce DataSense-Bench to study this capability through the fundamental problem of data selection and performance forecasting in machine learning. We ask AI agents to select and rank candidate training subsets that can be used to fine-tune a small LLM model.…",
+      "title": "DataSense-Bench: The First Step Toward an AI Scientist",
+      "url": "https://arxiv.org/abs/2610.12190v1"
+    },
+    {
+      "authors": [
+        "Kaisen Yang",
+        "Qingle Liu",
+        "Kejin Wang",
+        "Yicheng Zhao",
+        "Jieming Li",
+        "Shenghan Zheng",
+        "Ruize Yang",
+        "Bojun Yang",
+        "Heng Gong",
+        "Xiang Gao",
+        "Lanyue Zhang",
+        "Kaiyu Zhong",
+        "Zhuo Liu",
+        "Shaoxuan Li",
+        "Chengxi Li",
+        "Yong Yan",
+        "Weixuan Zhang",
+        "Tianwei Luo",
+        "Situ Wang",
+        "Youjie Zheng",
+        "Sihan Zhao",
+        "Shengyuan Wang",
+        "Huan-ang Gao",
+        "Jiazheng Xu",
+        "Xiaohui Xie",
+        "Wentao Han",
+        "Hongning Wang"
+      ],
+      "id": "2610.12341v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Adversarial games have driven advances from heuristic search to reinforcement learning, yet learning and adapting strategies from limited samples remain challenging. AI agents offer an alternative by turning game experience into revisions of executable policies. Building on heuristic learning (HL), we formalize Adversarial Heuristic Learning (AHL), a paradigm that uses AI agents as learning engines to refine game policies and supporting software while keeping model weights fixed.…",
+      "title": "Can AI Agents Learn Their Way to the Top? Evaluating Heuristic Learning in a Long-Running Game Agent Competition",
+      "url": "https://arxiv.org/abs/2610.12341v1"
+    },
+    {
+      "authors": [
+        "Kaiser Sun",
+        "Bernal Jimenez Gutierrez",
+        "Hongjun Liu",
+        "Jingyu Zhang",
+        "Jie Gao",
+        "Mark Dredze",
+        "Daniel Khashabi"
+      ],
+      "id": "2610.12360v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "When retrieved evidence contradicts an agent's prior beliefs, does it revise its answer, acknowledge uncertainty, or persist with an incorrect conclusion? Existing evaluations of agentic systems focus primarily on task success, offering limited insight into how agents handle such conflicts. We propose to evaluate agents on epistemic humility (EH): the agent's willingness to recognize, act on, and communicate uncertainty during task execution.…",
+      "title": "Accurate but Not Humble: Evaluating Epistemic Humility in LLM Agents under Knowledge Conflict",
+      "url": "https://arxiv.org/abs/2610.12360v1"
+    },
+    {
+      "authors": [
+        "Babak Barazandeh",
+        "Connor Swanson",
+        "Chinmay Kulkarni",
+        "Nikhil Mungel"
+      ],
+      "id": "2610.12375v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Agents are deployed in applications from trip planners and stock trading to IT incident triage. In most cases, LLM agents work autonomously with minimal rule-based safeguarding, leading to cost and safety issues from irreversible actions. Recent works resolve this either by using a safeguard agent to monitor behavior or evaluating logs post-hoc. The first adds cost and latency to every step; the second delivers its verdict after the run, when tokens are burned and damage is done.…",
+      "title": "OnTrack: Real-Time Monitoring and Intervention in LLM Agent Trajectories via Streaming Structure-Aware Optimal Transport",
+      "url": "https://arxiv.org/abs/2610.12375v1"
+    },
+    {
+      "authors": [
+        "Erin Crawley",
+        "Hidenori Tanaka"
+      ],
+      "id": "2610.12436v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "AI agents can now conduct real-world cyberattacks, scale up capabilities with the number of agents, and collectively pursue misaligned goals to obtain rewards. Together, these factors raise the risk of a population explosion of misaligned agents: agents could compromise computers and secretly deploy additional agents, creating a self-reinforcing cycle where larger populations develop greater collective cyber capability and expand further.…",
+      "title": "Ecology of AI Agents: Collaboration Creates a Population Threshold for Takeoff",
+      "url": "https://arxiv.org/abs/2610.12436v1"
+    },
+    {
+      "authors": [
+        "Oskar J. Hollinsworth",
+        "Alex F. Spies",
+        "Tigist Diriba",
+        "Adam Gleave",
+        "Chris Cundy"
+      ],
+      "id": "2610.12445v1",
+      "published": "2026-10-08",
+      "source": "arXiv",
+      "summary": "Recent incidents have highlighted the challenge of monitoring LLM agents and the danger of models deceiving people. We show that white-box deception detection via probes can be scaled up to frontier monitoring settings by collecting the largest deception dataset to date for training probes and introducing a novel probe architecture which can aggregate information across many layers and tokens.…",
+      "title": "Caught in the Act: Probes Effectively Detect Sabotage and Catch Unverbalized Deception",
+      "url": "https://arxiv.org/abs/2610.12445v1"
+    },
     {
       "authors": [
         "Samuel Margolis",
@@ -475,160 +814,6 @@
       "summary": "Frontier LLM agents have been shown to be capable of solving increasingly complex tasks for which humans have measurable solutions. This begs the pertinent question of whether LLM agents can go beyond what humans have already solved. The ability to develop sophisticated strategies to tackle consequential problems becomes paramount as well-trodden, human-developed solutions become insufficient for problems for which we lack context or enough training data.…",
       "title": "SpeedrunBench: Challenging LLM Agents with Video Game Speedrunning",
       "url": "https://arxiv.org/abs/2610.08076v1"
-    },
-    {
-      "authors": [
-        "Yunju Kang",
-        "Seonghyeon Cho",
-        "Irene Li",
-        "Yeo-Chan Yoon",
-        "Chanjun Park"
-      ],
-      "id": "2610.08082v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "LLM tool-use agents operate in dynamic environments where many actions carry operational risk. However, most safety mechanisms react only after errors manifest. Existing pre-emptive approaches either fine-tune the agent on chain-of-thought deliberation or compile natural-language guardrails into runtime checks, but they do so without exposing a structural, auditable verdict.…",
-      "title": "POLAR: Ontology-Guided Risk Prevention for Tool-Calling LLM Agents",
-      "url": "https://arxiv.org/abs/2610.08082v1"
-    },
-    {
-      "authors": [
-        "Haneen Najjar",
-        "Luca Scionis",
-        "Haritz Puerto",
-        "Sahar Abdelnabi"
-      ],
-      "id": "2610.08098v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "AI agents increasingly rely on modular third-party \"skills\" that are dynamically selected by skill routers to execute complex tasks. While recent studies highlight the threat of prompt injections embedded in these skills, existing evaluations often assume settings where the malicious skill is already selected for execution. We show that this assumption can substantially overestimate attack success.…",
-      "title": "Surviving the Router: Optimizing Skill Injections for Retrieval and Execution",
-      "url": "https://arxiv.org/abs/2610.08098v1"
-    },
-    {
-      "authors": [
-        "Yibo Li",
-        "Jinhang Qiu",
-        "Zhi Zheng",
-        "Qianyun Guo",
-        "Jiaying Wu",
-        "Shuo Ji",
-        "Bryan Hooi"
-      ],
-      "id": "2610.08215v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "Learning from experience is essential for LLM agents to adapt to unfamiliar and dynmaic environments. Evaluating this ability is therefore important for understanding how effectively agents acquire and use new knowledge. Existing benchmarks have sought to evaluate this ability, but they primarily evaluate tasks whose rules are provided in the instructions or already familiar to pretrained models, making it difficult to distinguish learning from interactions from reasoning with existing knowledge…",
-      "title": "Learn2Play Bench: How Well Do LLM Agents Learn from Experience in Unfamiliar Environments?",
-      "url": "https://arxiv.org/abs/2610.08215v1"
-    },
-    {
-      "authors": [
-        "Toby D. Pilditch",
-        "Konstantinos Voudouris",
-        "Alexandra Abbas",
-        "Cozmin Ududec"
-      ],
-      "id": "2610.08364v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "Frontier AI evaluations increasingly use open-ended, agentic, long-horizon tasks whose transcripts can span hundreds of pages of outputs and actions from complex multi-agent networks. The observability envelop-the range of what evaluators can reliably infer about an agent's behaviours-is therefore narrowing.…",
-      "title": "Transect: Retaining Observability for Long-Horizon LLM Agent Evaluations",
-      "url": "https://arxiv.org/abs/2610.08364v1"
-    },
-    {
-      "authors": [
-        "Jiaju Chen",
-        "Min Yang",
-        "Jinghua Piao",
-        "Xiaochong Lan",
-        "Xu Xia",
-        "Xiangnan He",
-        "Yong Li"
-      ],
-      "id": "2610.08402v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "Multi-turn LLM agents often receive sparse task feedback across several interactions, while generating each response token by token. This creates two related credit-assignment questions: which responses helped achieve the outcome, and which generation decisions mattered within each response? Existing methods typically focus on only one level: turn-level methods evaluate complete responses but do not distinguish the decisions within them; token-level methods can propagate feedback across turns bu…",
-      "title": "VETTA: Coordinating Turn- and Token-Level Credit Assignment for Multi-Turn LLM Agents",
-      "url": "https://arxiv.org/abs/2610.08402v1"
-    },
-    {
-      "authors": [
-        "Lasse B. Strand",
-        "Robert Jakob",
-        "Kevin O'Sullivan",
-        "Markus Kreft"
-      ],
-      "id": "2610.08452v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "Retrieval-augmented generation (RAG) is a widely used approach for grounding large language models (LLMs) in external knowledge. However, configuring a pipeline is an expensive hyperparameter optimization problem over many interacting choices, from chunking and embedding model to reranking and generation.…",
-      "title": "Agentic AutoRAG: RAG Pipeline Optimization through Reasoning-Driven Agents",
-      "url": "https://arxiv.org/abs/2610.08452v1"
-    },
-    {
-      "authors": [
-        "Sayan Sinha",
-        "Vipul Harsh",
-        "B. Aditya Prakash",
-        "Vyas Sekar",
-        "Hui Zhang"
-      ],
-      "id": "2610.08622v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "System administrators of Internet-scale services need to resolve failure incidents to maintain reliability of such services. Ideally, we want a troubleshooting system to be: (1) expressive to known and unknown incidents with high accuracy; (2) cost efficient at scale; (3) explainable to provide actionable insights operators can act on; and (4) entail low effort from the operators.…",
-      "title": "Agentic RCA for Internet-Scale Services Using Constrained Creativity",
-      "url": "https://arxiv.org/abs/2610.08622v1"
-    },
-    {
-      "authors": [
-        "Suxin Ji",
-        "Hungtao Wan",
-        "Shaoxuan Chen",
-        "An Zhang"
-      ],
-      "id": "2610.08668v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "Behavioral watermarking embeds an owner identifier in an LLM agent's high-level action choices, giving provenance without touching output tokens. Prior agent watermarks break in two ways. First, all three prior schemes bind the watermark to the exact action symbol, so renaming a tool desynchronizes decoding even when the observation is untouched; in AgentMark's own robustness test, paraphrasing the observation alone drops bit-recovery to 16.8%.…",
-      "title": "Semantic Behavioral Watermarking: Paraphrase-Robust and Forgery-Resistant Provenance for LLM Agents",
-      "url": "https://arxiv.org/abs/2610.08668v1"
-    },
-    {
-      "authors": [
-        "Siru Jiang",
-        "Yongzhe Lyu",
-        "Shuo Lu",
-        "Yubin Wang",
-        "Yuxiang Zhang",
-        "Yue Liao",
-        "Bin Wang",
-        "Jian Liang",
-        "Tieniu Tan"
-      ],
-      "id": "2610.08720v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "LLM-based agents are increasingly advancing scientific and engineering problem solving, with physics simulation emerging as a challenging yet practical testbed for reproducing complex physical phenomena with application in embodied AI, games and films. As the workhorse of such simulation, a solver computes how the state of a dynamic system evolves over time.…",
-      "title": "WorldSolver: Can LLM Agents Simulate the Physical Dynamics via Solver Generation?",
-      "url": "https://arxiv.org/abs/2610.08720v1"
-    },
-    {
-      "authors": [
-        "Ankit Sonthalia",
-        "Haritz Puerto",
-        "Alexander Rubinstein",
-        "Martin Gubri",
-        "Seong Joon Oh"
-      ],
-      "id": "2610.08775v1",
-      "published": "2026-10-06",
-      "source": "arXiv",
-      "summary": "Large language models (LLMs) can solve many narrow tasks, but querying them separately for millions of related instances can be prohibitively expensive. Can LLM agents autonomously create cheaper solutions for such workloads? We call this ability \"bottling\": the ability to turn general capabilities into task-specific solutions that balance answer quality and amortised cost.…",
-      "title": "Agent in a Bottle: Can LLM Agents Turn Their Capabilities Into Cheap, Scalable Artifacts?",
-      "url": "https://arxiv.org/abs/2610.08775v1"
     }
   ],
   "query": "all:\"AI agent\" OR all:\"LLM agent\"",

@@ -373,11 +373,11 @@ function countWikiPages() {
 /** 取最近一次 git 提交时间作为构建时间（可复现，不用当前时间） */
 function resolveBuildTime() {
   const fromEnv = process.env.SITE_BUILD_TIME;
-  if (fromEnv && /^\d{4}-\d{2}-\d{2}/.test(fromEnv)) return fromEnv.slice(0, 10);
+  if (fromEnv && /^\d{4}-\d{2}-\d{2}/.test(fromEnv)) return fromEnv.slice(0, 25);
   try {
     const out = execSync('git log -1 --format=%cI', { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] })
       .toString().trim();
-    if (out) return out.slice(0, 10);
+    if (out) return out.slice(0, 25);
   } catch { /* 非 git 仓库或尚无提交 */ }
 
   // 尚无 git 提交时的兜底：取源文件中声明的最大日期（front-matter 的 date）。

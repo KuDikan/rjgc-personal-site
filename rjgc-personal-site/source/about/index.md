@@ -9,7 +9,7 @@ updated: 2026-10-08
 ## 基本信息
 
 - **姓名**：KuDikan
-- **身份**：独立开发者
+- **身份**：Minecraft 模组开发者
 - **邮箱**：kudikan@kukuku.icu
 
 ## 我在做什么

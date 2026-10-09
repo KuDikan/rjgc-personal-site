@@ -154,22 +154,29 @@ twikoo:
   envId: null
   region: null
 waline:
-  enable: false
-  serverURL: null
+  enable: true
+  serverURL: "https://waline.personal-blog.kukuku.icu/"
   lang: zh-CN
   locale: {}
+  emoji:
+    - https://unpkg.com/@waline/emojis@1.4.0/hoyoverse-hi3
+    - https://unpkg.com/@waline/emojis@1.4.0/bilibili
+    - https://unpkg.com/@waline/emojis@1.4.0/bmoji
+  requiredMeta:
+    - nick
+  pageview: true
 summary:
   enable: false
 pagefind:
   enable: true
 social:
-  github: https://github.com/KuDikan || github || "#191717"
-  email: mailto:you@example.com || envelope || "#55acd5"
+  github: https://github.com/KuDikan/rjgc-personal-site || github || "#191717"
+  email: mailto:kudikan@kukuku.icu || envelope || "#55acd5"
 sidebar:
   position: left
   avatar: avatar.jpg
 widgets:
-  random_posts: true
+  random_posts: false
   recent_comments: false
 footer:
   since: 2026

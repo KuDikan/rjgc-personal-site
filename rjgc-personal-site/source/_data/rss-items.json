@@ -80,6 +80,24 @@
     {
       "feedId": "cloudflare-blog",
       "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:38bfcb4310c98b8dd26e723b",
+      "link": "https://blog.cloudflare.com/workers-on-demand-profiling/",
+      "published": "Fri, 09 Oct 2026 13:00:00 GMT",
+      "summary": "On-demand CPU and memory profiling for Cloudflare Workers and Durable Objects is now available. Now you can generate interactive flamegraphs directly in production to quickly track down memory leaks and performance bottlenecks.",
+      "title": "Introducing on-demand CPU and memory profiling with flamegraphs for Workers and Durable Objects"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:3854715ee3f870a4d32a175e",
+      "link": "https://blog.cloudflare.com/deno-joins-cloudflare/",
+      "published": "Fri, 09 Oct 2026 12:50:00 GMT",
+      "summary": "The Deno team is joining Cloudflare to radically simplify self-hosting Workers and Durable Objects, so developers can use the same primitives in more places.",
+      "title": "Deno is joining Cloudflare"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
       "id": "cloudflare-blog:cd838e82df4db660bfbd321f",
       "link": "https://blog.cloudflare.com/one-observability-platform/",
       "published": "Fri, 02 Oct 2026 18:00:00 GMT",
@@ -175,6 +193,15 @@
       "published": "Thu, 24 Sep 2026 20:00:00 +0000",
       "summary": "What is a developer to do when they need something more tangible than a chat box? Enter canvases. The post When chat is the wrong UI appeared first on The GitHub Blog.",
       "title": "When chat is the wrong UI"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:400f93c3a2faae18adc1a3b7",
+      "link": "https://github.blog/security/how-one-bug-bounty-researcher-chooses-the-features-they-investigate/",
+      "published": "Thu, 08 Oct 2026 17:02:52 +0000",
+      "summary": "As we kick off Cybersecurity Awareness Month, the GitHub Bug Bounty team spotlights @vaib25vicky, exploring their methodology, techniques, and experiences hacking on GitHub. The post How one bug bounty researcher chooses the features they investigate appeared first on The GitHub Blog.",
+      "title": "How one bug bounty researcher chooses the features they investigate"
     },
     {
       "feedId": "github-blog",
