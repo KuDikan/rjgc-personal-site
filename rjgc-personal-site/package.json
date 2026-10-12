@@ -15,15 +15,16 @@
     "gen": "hexo generate",
     "build": "npm run clean && npm run gen || npm run gen",
     "search:index": "pagefind --site public",
-    "build:search": "npm run build && npm run search:index",
+    "headers": "node tools/build-headers.mjs",
+    "build:search": "npm run build && npm run search:index && npm run headers",
     "dev": "hexo server",
     "preview": "wrangler dev",
     "deploy": "wrangler deploy",
     "verify:theme": "node tools/verify-theme.mjs",
     "data": "node tools/build-data.mjs",
     "data:validate": "node tools/validate.mjs",
-    "ci:build": "npm run verify:theme && npm run data && npm run build:search && npm run data:validate",
-    "verify:player": "node tools/verify-player-bundle.mjs"
+    "verify:player": "node tools/verify-player-bundle.mjs",
+    "ci:build": "npm run verify:theme && npm run data && npm run build:search && npm run data:validate"
   },
   "devDependencies": {
     "hexo": "7.3.0",

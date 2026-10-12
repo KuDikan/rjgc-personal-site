@@ -37,9 +37,9 @@ image_list:
 index_images: []
 image_server: null
 audio:
-  - title: 网易云
+  - title: "网易云歌单 3778678"
     list:
-      - https://music.163.com/#/playlist?id=2682238757
+      - "https://music.163.com/#/playlist?id=3778678"
 modules:
   debug: false
   player: true

@@ -316,7 +316,77 @@ function validateAttribution() {
   }
 }
 
-// ---------- 5d. 数据面板必须已渲染（构建期，不能留占位） ----------
+// ---------- 5e. _headers 缓存规则必须存在且互斥 ----------
+//
+// 背景：站点在 Cloudflare Workers Static Assets 上，默认给所有资源发
+// `Cache-Control: public, max-age=0, must-revalidate`，导致每次加载
+// 每个资源都要 revalidate（表现就是 JS/CSS/图片全走 304）。
+//
+// _headers 可以改写响应头（实测有效），但有两个硬约束：
+//   1. 规则**叠加**而非覆盖——多条命中同一文件时同名头逗号拼接，
+//      浏览器取哪个没有保证；
+//   2. 通配符一条规则只能有一个 *，且 * 可跨 /。
+// 所以规则必须互斥，由 tools/build-headers.mjs 生成并自校验。
+//
+// 这里在校验层再断言一次，防止"脚本跑了但产物不对"。
+{
+  const headersFile = join(PUBLIC_DIR, '_headers');
+  if (!existsSync(headersFile)) {
+    err('public/_headers 不存在 —— 所有资源会是 max-age=0，每次加载都 revalidate。' +
+        '可执行 npm run headers 生成（构建链 build:search 已包含该步骤）。');
+  } else {
+    const text = readFileSync(headersFile, 'utf8');
+    // 解析规则：模式行 + 紧随的 Cache-Control 行
+    const rules = [];
+    const lines = text.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      const m = lines[i].match(/^(\S+)\s*$/);
+      if (m && !lines[i].startsWith('#') && lines[i].startsWith('/')) {
+        const next = (lines[i + 1] || '').match(/^\s+Cache-Control:\s*(.+)$/);
+        if (next) rules.push({ pattern: m[1], value: next[1].trim() });
+      }
+    }
+
+    if (!rules.length) {
+      err('_headers 里没有解析出任何规则。');
+    } else {
+      // 每个规则必须只有一个 max-age（叠加故障的典型症状就是出现两个）
+      const dup = rules.filter((r) => (r.value.match(/max-age/g) || []).length > 1);
+      if (dup.length) {
+        err(`_headers 有 ${dup.length} 条规则的 Cache-Control 含多个 max-age（规则重叠导致拼接）：\n` +
+            dup.slice(0, 3).map((d) => `      ${d.pattern} → ${d.value}`).join('\n'));
+      }
+
+      // 关键路径必须有规则覆盖
+      const mustHave = [
+        ['/', '首页 HTML'],
+        ['/about/', '普通页面 HTML'],
+        ['/js/siteInit.js', '无版本号 JS'],
+        ['/css/siteInit.css', '无版本号 CSS'],
+        ['/assets/*', '图片等静态素材'],
+        ['/pagefind/*', '搜索索引'],
+        ['/rss.xml', 'feed'],
+      ];
+      const missing = mustHave.filter(([p]) => !rules.some((r) => r.pattern === p));
+      if (missing.length) {
+        err(`_headers 缺少关键规则：${missing.map(([, label]) => label).join('、')}`);
+      }
+
+      // HTML 必须是短缓存（不能长缓，否则发新文章后访客看不到）
+      const htmlRules = rules.filter((r) => !/\.[a-z0-9]+$/i.test(r.pattern) && r.pattern !== '/assets/*' && r.pattern !== '/pagefind/*');
+      const badHtml = htmlRules.filter((r) => /max-age=(?:31536000|2592000)/.test(r.value));
+      if (badHtml.length) {
+        err(`有 ${badHtml.length} 条 HTML 规则用了过长缓存，发新文章后访客将长时间看不到更新。`);
+      }
+
+      if (!errors.length) {
+        console.log(`  [ok] _headers 缓存规则 ${rules.length} 条（HTML 短缓 / 哈希长缓 / 素材 30 天）`);
+      }
+    }
+  }
+}
+
+// ---------- 5f. 数据面板必须已渲染（构建期，不能留占位） ----------
 
 // 历史教训：papers/rss/status/wiki 曾用客户端占位 div
 //（<p class="loading">正在加载…</p>），但站点里没有任何脚本会去填它们。

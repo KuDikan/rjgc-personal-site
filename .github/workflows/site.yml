@@ -65,6 +65,11 @@ jobs:
       - name: 生成搜索索引（Pagefind）
         run: npx pagefind --site public
 
+      # 必须在 pagefind 之后：pagefind 的索引文件也要纳入缓存规则。
+      # 也必须在 hexo generate 之后：hexo clean 会清空 public/。
+      - name: 生成缓存规则（_headers）
+        run: npm run headers
+
       - name: 校验数据与产物
         run: node tools/validate.mjs
 
@@ -75,7 +80,7 @@ jobs:
                    archives/index.html tags/index.html papers/index.html \
                    rss/index.html wiki/index.html status/index.html \
                    rss.xml atom.xml feed.json css/app.css \
-                   pagefind/pagefind.js; do
+                   pagefind/pagefind.js _headers; do
             test -s "public/$f" || { echo "缺少或为空: public/$f"; exit 1; }
           done
           echo "文件总数: $(find public -type f | wc -l)"
