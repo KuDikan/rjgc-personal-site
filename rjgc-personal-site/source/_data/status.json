@@ -7,7 +7,7 @@
     "sections": 7,
     "wikiPages": 1
   },
-  "lastBuild": "2026-10-09T21:45:22+08:00",
+  "lastBuild": "2026-10-12T11:17:38+08:00",
   "notes": "计数口径：posts=source/_posts 下非下划线开头的 md 数；wikiPages=source/wiki 下 md 数；sections=导航栏固定七项。",
   "stack": {
     "deploy": "Cloudflare Workers",

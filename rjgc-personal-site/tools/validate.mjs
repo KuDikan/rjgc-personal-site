@@ -15,6 +15,13 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+
+// scripts/ 下的插件是 CommonJS（Hexo 用 require 加载），
+// 本文件是 ESM，用 createRequire 引共享的路径换算规则。
+// 修复（waline-path-fix.js）与校验必须用同一套规则，否则会各说各话。
+const require = createRequire(import.meta.url);
+const browserPath = require('../scripts/lib/browser-path.js');
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = join(root, 'source', '_data');
@@ -260,7 +267,56 @@ function validateAttribution() {
   }
 }
 
-// ---------- 5c. 数据面板必须已渲染（构建期，不能留占位） ----------
+// ---------- 5c. Waline 访问量的 data-path 必须与浏览器路径一致 ----------
+//
+// 历史教训：ShokaX 有两个地方给 Waline 传路径，来源不同——
+//   footer.pug 的 data-path ← post.path（构建期，形如 /about/index.html）
+//   comments.ts 的 path     ← window.location.pathname（运行时，形如 /about/）
+// Waline 客户端发现两者不一致时，该元素只查不增：
+// 浏览量记到 /about/ 名下，展示时却查 /about/index.html → 永远是 0。
+// 由 scripts/waline-path-fix.js 把 data-path 规范化成浏览器路径。
+//
+// 断言方式：拿每个页面的 data-path 与"该页 canonical 浏览器路径"逐一比对，
+// 而不是简单要求"必须以 / 结尾"——404.html 这类文件式页面
+// 的浏览器路径本来就是 /404.html，那样会误报。
+{
+  const { toBrowserPath } = browserPath;
+
+  const htmlFiles = [];
+  const walk = (dir, depth = 0) => {
+    if (depth > 4) return;
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walk(p, depth + 1);
+      else if (e.name.endsWith('.html')) htmlFiles.push(p);
+    }
+  };
+  walk(PUBLIC_DIR);
+
+  const bad = [];
+  let checked = 0;
+  for (const f of htmlFiles) {
+    const html = readFileSync(f, 'utf8');
+    // 该页面对应的 route 路径（相对 public/）
+    const route = f.slice(PUBLIC_DIR.length + 1).replace(/\\/g, '/');
+    const want = toBrowserPath(route);
+
+    for (const m of html.matchAll(/class="[^"]*\bwaline-pageview-count\b[^"]*"[^>]*\sdata-path="([^"]*)"/gi)) {
+      checked++;
+      if (m[1] !== want) bad.push(`${route} → data-path="${m[1]}"，应为 "${want}"`);
+    }
+  }
+
+  if (bad.length) {
+    err(`Waline 访问量的 data-path 与浏览器路径不一致（会导致计数与显示对不上、永远是 0）：\n` +
+        bad.map((b) => `      ${b}`).join('\n') +
+        '\n      检查 scripts/waline-path-fix.js 是否被加载。');
+  } else if (checked) {
+    console.log(`  [ok] Waline 访问量路径规范（${checked} 处，均与 location.pathname 一致）`);
+  }
+}
+
+// ---------- 5d. 数据面板必须已渲染（构建期，不能留占位） ----------
 
 // 历史教训：papers/rss/status/wiki 曾用客户端占位 div
 //（<p class="loading">正在加载…</p>），但站点里没有任何脚本会去填它们。
