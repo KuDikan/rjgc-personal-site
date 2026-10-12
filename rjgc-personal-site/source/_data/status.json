@@ -3,11 +3,11 @@
     "externalFeeds": 3,
     "papers": 50,
     "posts": 4,
-    "rssItems": 37,
+    "rssItems": 39,
     "sections": 7,
     "wikiPages": 1
   },
-  "lastBuild": "2026-10-09T21:36:35+08:00",
+  "lastBuild": "2026-10-09T21:45:22+08:00",
   "notes": "计数口径：posts=source/_posts 下非下划线开头的 md 数；wikiPages=source/wiki 下 md 数；sections=导航栏固定七项。",
   "stack": {
     "deploy": "Cloudflare Workers",

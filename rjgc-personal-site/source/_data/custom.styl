@@ -642,3 +642,39 @@
 
     &.is-open .mp-panel
       width calc(100vw - 2rem)
+
+// ---------- Waline 表情尺寸 ----------
+//
+// 覆盖 Waline 自带样式的两个表情尺寸。Waline 的样式表是**异步加载**的
+// （<link rel="stylesheet" media="none" onload="this.media='all'">），
+// 且它在文档中位于主样式之前还是之后由主题注入位置决定，
+// 所以这里显式用 !important，不依赖文档顺序与特异性比较。
+//
+// 被覆盖的原始规则（来自 /css/waline-*.css）：
+//   .wl-emoji-popup .wl-emoji            { max-width:1.5em; max-height:1.5em }
+//   .wl-content .vemoji, .wl-content .wl-emoji { height:1.25em; vertical-align:baseline }
+//
+// vemoji 确认是 <img>（Waline 源码里用 `.md img:not(.emoji):not(.vemoji)`
+// 做选择器），所以只设 height 即按原始比例缩放，不会变形。
+
+// 1) 表情选择弹窗里的表情：1.5em → 2.3em
+.wl-emoji-popup .wl-emoji
+  max-width 2.3em !important
+  max-height 2.3em !important
+
+// 弹窗里的按钮容器原本只有 width:2em，表情放大到 2.3em 后会溢出按钮
+// （hover 底色只有 2em 宽，表情却有 2.3em），所以按钮一起放大。
+// 原始规则：.wl-emoji-popup button { width:2em; margin:.125em; padding:0 }
+.wl-emoji-popup button
+  width 2.6em !important
+
+// 2) 评论正文里实际渲染的表情：1.25em → 8em
+.wl-content .vemoji, .wl-content .wl-emoji
+  height 8em !important
+
+// 注意：上面保留了原始的 vertical-align:baseline。8em 的表情与 1em 的正文
+// 同在一条基线时，表情会从基线向上耸起、把行高撑得很高。若观感不好，
+// 取消下面这行的注释即可让表情在文字行里垂直居中：
+//
+// .wl-content .vemoji, .wl-content .wl-emoji
+//   vertical-align middle !important

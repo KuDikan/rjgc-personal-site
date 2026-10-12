@@ -223,7 +223,44 @@ function validateAttribution() {
   }
 }
 
-// ---------- 5b. 数据面板必须已渲染（构建期，不能留占位） ----------
+// ---------- 5b. custom.styl 的规则必须真的进了产物 ----------
+//
+// custom.styl 是被主题在构建期读进来编译的（不是运行时链接），
+// 一旦编译失败或被跳过，里面所有自定义样式会**静默消失**——
+// 页面照常渲染、HTTP 200、无任何报错。
+// 这里用一组"哨兵规则"验证产物里确实有 custom.styl 的内容。
+{
+  const cssDir = join(PUBLIC_DIR, 'css');
+  const stylFile = join(root, 'source', '_data', 'custom.styl');
+
+  if (!existsSync(stylFile)) {
+    warn('source/_data/custom.styl 不存在，站点将完全使用主题默认样式');
+  } else if (!existsSync(cssDir)) {
+    err('public/css 目录不存在，样式未构建');
+  } else {
+    // 哨兵：custom.styl 里特征性的、不会与主题默认样式混淆的片段
+    const sentinels = [
+      ['.wl-content .vemoji', 'Waline 表情尺寸（正文）'],
+      ['.wl-emoji-popup .wl-emoji', 'Waline 表情尺寸（选择弹窗）'],
+      ['#brand .logo .artboard', '首页大标题字体'],
+      ['mp-breathe', '播放器呼吸动画'],
+      ['.data-panel', '数据面板'],
+    ];
+
+    const cssFiles = readdirSync(cssDir).filter((f) => f.endsWith('.css'));
+    const all = cssFiles.map((f) => readFileSync(join(cssDir, f), 'utf8')).join('\n');
+    const missing = sentinels.filter(([needle]) => !all.includes(needle)).map(([, label]) => label);
+
+    if (missing.length) {
+      err(`custom.styl 的部分规则未出现在产物 CSS 中：${missing.join('、')}。` +
+          '可能 styl 编译失败或被跳过，页面会静默丢失这些样式。');
+    } else {
+      console.log(`  [ok] custom.styl 规则已进产物（${sentinels.length} 组哨兵全部命中）`);
+    }
+  }
+}
+
+// ---------- 5c. 数据面板必须已渲染（构建期，不能留占位） ----------
 
 // 历史教训：papers/rss/status/wiki 曾用客户端占位 div
 //（<p class="loading">正在加载…</p>），但站点里没有任何脚本会去填它们。

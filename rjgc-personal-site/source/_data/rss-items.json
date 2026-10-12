@@ -80,6 +80,15 @@
     {
       "feedId": "cloudflare-blog",
       "feedTitle": "The Cloudflare Blog",
+      "id": "cloudflare-blog:4a9f5b72faa10f5cb24b73d4",
+      "link": "https://blog.cloudflare.com/clef-faster-cheaper-multimodal/",
+      "published": "Fri, 09 Oct 2026 18:27:34 GMT",
+      "summary": "We are expanding the Clef decision model family with Clef-omni, natively processing audio, video, images, and text in a single pipeline. We’ve also lowered Clef-flash pricing and boosted Clef inference speeds by up to 2.0x.",
+      "title": "Introducing Clef-omni with full multimodality, plus a faster Clef and a cheaper Clef-flash"
+    },
+    {
+      "feedId": "cloudflare-blog",
+      "feedTitle": "The Cloudflare Blog",
       "id": "cloudflare-blog:38bfcb4310c98b8dd26e723b",
       "link": "https://blog.cloudflare.com/workers-on-demand-profiling/",
       "published": "Fri, 09 Oct 2026 13:00:00 GMT",
@@ -256,6 +265,15 @@
       "published": "Fri, 25 Sep 2026 15:00:00 +0000",
       "summary": "How we fully migrated github.com away from CSS-in-JS. The post Improving site performance by shipping more CSS appeared first on The GitHub Blog.",
       "title": "Improving site performance by shipping more CSS"
+    },
+    {
+      "feedId": "github-blog",
+      "feedTitle": "The GitHub Blog",
+      "id": "github-blog:85c11fca4aa44ff1793b2537",
+      "link": "https://github.blog/developer-skills/career-growth/hack-the-world-why-hackathons-are-still-the-best-place-to-learn-to-build/",
+      "published": "Fri, 09 Oct 2026 16:00:00 +0000",
+      "summary": "The barriers to building software have collapsed. Today, anyone can build. Hackathons are a great place to start learning. The post Hack the World: Why hackathons are still the best place to learn to build appeared first on The GitHub Blog.",
+      "title": "Hack the World: Why hackathons are still the best place to learn to build"
     },
     {
       "feedId": "github-blog",
