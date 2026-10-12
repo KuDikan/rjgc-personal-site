@@ -155,7 +155,7 @@ twikoo:
   region: null
 waline:
   enable: true
-  serverURL: "https://waline.personal-blog.kukuku.icu/"
+  serverURL: "https://walines.kukuku.icu/"
   lang: zh-CN
   locale: {}
   emoji:
