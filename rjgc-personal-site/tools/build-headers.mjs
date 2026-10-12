@@ -67,25 +67,24 @@ const HASHED = /-[A-Z0-9]{8}\.(js|css)$/;
 /**
  * 缓存策略集中在此，调整 TTL 只改这一处。
  *
- * - html     普通页面。给 60s 短缓存：回访/后退时秒开，
- *            又不会让新文章长时间不可见。must-revalidate 保证过期后必校验。
+ * - html     普通页面。给 12hs 缓存，must-revalidate 保证过期后必校验。
  * - hashed   内容哈希命名的 js/css。文件名变=内容变，可放心长缓存。
  * - script   无版本号的 js/css（siteInit.js、app.css、page.css 等）。
  *            主题一升级内容就变、URL 不变，不能长缓存。
  * - asset    图片等静态素材，非哈希命名，30 天。
- * - pagefind 搜索索引，每次构建都变，1 小时。
- * - feed     RSS/Atom，供阅读器抓取，5 分钟。
+ * - pagefind 搜索索引，每次构建都变，24 小时。
+ * - feed     RSS/Atom，供阅读器抓取，1 小时。
  * - text     .LEGAL.txt 等许可证文本，内容不变，30 天。
  * - fallback 未识别的类型，保守起见短缓存。
  */
 const TTL = {
   asset: 'public, max-age=2592000',
-  fallback: 'public, max-age=300, must-revalidate',
-  feed: 'public, max-age=300',
+  fallback: 'public, max-age=3600, must-revalidate',
+  feed: 'public, max-age=3600',
   hashed: 'public, max-age=31536000, immutable',
-  html: 'public, max-age=60, must-revalidate',
-  pagefind: 'public, max-age=3600, must-revalidate',
-  script: 'public, max-age=3600, must-revalidate',
+  html: 'public, max-age=43200, must-revalidate',
+  pagefind: 'public, max-age=86400, must-revalidate',
+  script: 'public, max-age=86400, must-revalidate',
   text: 'public, max-age=2592000',
 };
 

@@ -20,22 +20,22 @@
     "enabled": true
   },
 
-  // 一旦配置了 routes，wrangler 会默认关闭 workers.dev。
-  // 这里显式保持开启：workers.dev 是"与域名绑定无关"的兜底入口，
-  // 也便于 CI 冒烟测试拿到一个确定可用的地址。
-  // 若你只想保留自定义域名、不暴露 workers.dev，改为 false 即可，
-  // 同时需把 CI 冒烟测试的目标换成 personal-blog.kukuku.icu。
-  "workers_dev": true,
-
-  // 自定义域名：声明式绑定（要求 kukuku.icu 这个 zone 与本Worker 在同一
-  // Cloudflare account，且 token 具备 Zone/DNS/Edit 权限）。
-  // 绑定成功后 wrangler 会自动创建对应 DNS 记录。
+  // 不在此处声明 routes/自定义域名。
   //
-  // 若 deploy 报权限或 zone 不可见的错误，注释掉本段并在 Dashboard 一次性绑定：
-  // Workers & Pages → rjgc-personal-site → Settings → Domains & Routes
-  //   → Add → Custom domain → personal-blog.kukuku.icu
-  // 之后每次 deploy 域名保持不变，与本文件无关。
-  "routes": [
-    { "pattern": "personal-blog.kukuku.icu", "custom_domain": true }
-  ]
+  // 域名 personal-blog.kukuku.icu 改由 Cloudflare 控制台的
+  // **Workers Routes** 接管（Workers & Pages → rjgc-personal-site
+  //   → Settings → Domains & Routes → Workers Routes）。
+  //
+  // 为什么从 wrangler.jsonc 里移除：声明式 custom_domain 会让 wrangler
+  // 在每次 deploy 时调用 /accounts/*/workers/scripts/*/domains/records，
+  // 该接口对当前 token 会报 "partially updated" 导致 CI 部署步骤变红
+  // （资产其实已上传成功）。交给控制台的 Workers Routes 后，
+  // wrangler 不再碰域名绑定，deploy 只做资产上传。
+  //
+  // 注意：一旦配置 routes，wrangler 会默认关闭 workers.dev，
+  // 所以这里显式保持开启——CI 冒烟测试优先用 wrangler 返回的
+  // deployment-url（workers.dev），为空时才回退到自定义域名。
+  // 若你只想保留自定义域名、不暴露 workers.dev，改为 false 即可，
+  // 同时需把 CI 冒烟测试的 fallback 保留为 personal-blog.kukuku.icu。
+  "workers_dev": true
 }
