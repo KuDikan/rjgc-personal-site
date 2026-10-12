@@ -164,6 +164,12 @@ jobs:
       # 这里只是对线上再做一次确认。
       - name: 冒烟测试（失败仅告警，不阻塞部署）
         run: |
+          # GitHub Actions 用 `bash -e {0}` 调用 run 脚本，errexit 默认开启。
+          # 必须显式关掉：本脚本的全部意义就是"失败了也别中断"，
+          # 而 curl 连不上站点时退出码非 0（6=解析失败 / 7=连不上），
+          # 在 `code=$(curl ...)` 这种命令替换赋值里会直接触发 -e 把脚本掐死。
+          # （踩过：只写 set -u 压不过 -e，CI 报 exit code 6 且后续项一次没跑。）
+          set +e
           set -u
           paths="/ /about/ /papers/ /wiki/ /status/ /rss/ /categories/ /archives/ /tags/ /rss.xml /atom.xml /feed.json"
           custom="https://personal-blog.kukuku.icu"
@@ -181,6 +187,7 @@ jobs:
           warn() { echo "::warning::$1"; fail=$((fail + 1)); }
 
           # AGPL-3.0 §7(b)：必须保留指向主题仓库的署名链接。
+          # 管道退出码取 grep 的，curl 失败不会触发 -e，故此处安全。
           if curl -fsS --max-time 30 "$base/" 2>/dev/null | grep -qi 'theme-shoka-x/hexo-theme-shokax'; then
             echo '  署名链接存在: OK'
             pass=$((pass + 1))
@@ -189,8 +196,9 @@ jobs:
           fi
 
           for p in $paths; do
-            # curl 连不上时 -w 仍会输出 000，故失败码统一视为 000
-            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$base$p" 2>/dev/null)
+            # curl 连不上时 -w 仍会输出 000，故失败码统一视为 000。
+            # 末尾 `|| true` 是双保险：即便将来有人重新打开 -e 也不会中断。
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$base$p" 2>/dev/null || true)
             code="${code:-000}"
             if [ "$code" = "200" ]; then
               echo "  $p -> $code"
